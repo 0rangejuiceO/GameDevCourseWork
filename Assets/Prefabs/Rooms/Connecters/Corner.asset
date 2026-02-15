@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 932f96503813b2541823d170c56effb6, type: 3}
+  m_Name: Corner
+  m_EditorClassIdentifier: Assembly-CSharp::ConnecterType
+  displayName: Corner
+  creationPrefab: {fileID: 5880260964656301182, guid: fdd9d7e89f499894d9b99ad4436acb22, type: 3}
+  actualPrefab: {fileID: 3728881259400474150, guid: 669b16139992aa64b8b5af4b38d71ca0, type: 3}
