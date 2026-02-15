@@ -56,7 +56,7 @@ public class MapGenerator : MonoBehaviour
     private Dictionary<ConnecterType, List<GameObject>> connecterObjectLists = new Dictionary<ConnecterType, List<GameObject>>();
     private Dictionary<int, List<RoomNode>> floorRooms = new Dictionary<int, List<RoomNode>>();
 
-    public async Task BeginMapGeneration()
+    public async Task<bool> BeginMapGeneration()
     {
         totalRoomsNum = roomPrefabs.Values.Sum();
 
@@ -122,6 +122,8 @@ public class MapGenerator : MonoBehaviour
 
         await Task.Yield();
         Debug.Log("Map Generation Complete");
+
+        return doReplacement;
     }
 
     private void DoReplacement()
@@ -635,6 +637,23 @@ public class MapGenerator : MonoBehaviour
             return;
 
         Vector3 mid = (start + end) * 0.5f;
+        Quaternion rotation = Quaternion.LookRotation(dir);
+
+
+        Vector3 checkHalfExtents = new Vector3(
+            (hallwayPrefab.creationPrefab.transform.localScale.x * 0.5f) + minHallwayGap,
+            (hallwayPrefab.creationPrefab.transform.localScale.y * 0.5f) + minHallwayGap,
+            (length * 0.5f) // Half the calculated length
+        );
+
+        Collider[] hits = Physics.OverlapBox(mid, checkHalfExtents - (Vector3.one * 0.01f), rotation);
+
+        if (hits.Length > 0) {
+            foreach (Collider col in hits)
+            {
+                Debug.Log($"Overlap detected with: {col.gameObject.name} at {col.transform.position}");
+            }
+        }
 
         GameObject hallway = Instantiate(hallwayPrefab.creationPrefab, mid, Quaternion.LookRotation(dir));
         connecterObjectLists[hallwayPrefab].Add(hallway);
@@ -858,57 +877,9 @@ public class MapGenerator : MonoBehaviour
 
         Collider[] hits = Physics.OverlapBox(cornerPos, checkHalfExtents - (Vector3.one * 0.01f), Quaternion.identity);
 
-        bool doThing = false;
-        if (doThing)
-        {
-            if (hits.Length == 0)
-            {
-                var corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation);
-                connecterObjectLists[hallwayCornerPrefab].Add(corner);
-                corner.name = newName;
-            }
-            else
-            {
-
-                foreach (Collider hit in hits)
-                {
-                    Debug.Log($"Hit {hit.gameObject.name} at {hit.transform.position} when placing corner at {cornerPos}");
-
-                    if (hit.gameObject.name.Contains("Corner"))
-                    {
-                        Vector3 cornerPosition = hit.gameObject.transform.position;
-
-                        Destroy(hit.gameObject);
-
-                        var corner = Instantiate(hallwayThreeJunctionPrefab.creationPrefab, cornerPosition, rotation);
-                        connecterObjectLists[hallwayThreeJunctionPrefab].Add(corner);
-                        corner.name = newName;
-
-                        corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation);
-                        connecterObjectLists[(hallwayCornerPrefab)].Add(corner);
-                        corner.name = newName;
-
-                    }
-                    else if (hit.gameObject.name.Contains("Hallway"))
-                    {
-                        var corner = Instantiate(hallwayThreeJunctionPrefab.creationPrefab, cornerPos, rotation);
-                        connecterObjectLists[hallwayThreeJunctionPrefab].Add(corner);
-                        corner.name = newName;
-
-                        Vector3 junctionEdge = GetRoomEdgePoint(corner, hit.transform.position);
-                        ChangeHallway(hit.gameObject, junctionEdge, hit.transform.position);
-
-                    }
-
-                }
-            }
-        }
-        else
-        {
-            var corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation);
-            connecterObjectLists[hallwayCornerPrefab].Add(corner);
-            corner.name = newName;
-        }
+        var corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation);
+        connecterObjectLists[hallwayCornerPrefab].Add(corner);
+        corner.name = newName;
 
     }
 

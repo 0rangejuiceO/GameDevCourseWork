@@ -9,9 +9,13 @@ public class SceneHandler : MonoBehaviour
 
     async void Start()
     {
-        await MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration();
+        bool doReplacement = await MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration();
 
-        Player.transform.position = spawnPosition;
+        if (doReplacement)
+        {
+            Player.transform.position = spawnPosition;
+        }
+        
 
     }
 

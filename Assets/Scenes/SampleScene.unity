@@ -509,7 +509,7 @@ MonoBehaviour:
     - {fileID: 0}
     _Values: 08000000080000000000000000000000000000000000000000000000
   standardDeviation: 50
-  minHallwayGap: 5
+  minHallwayGap: 9
   mapSize: {x: 500, y: 500}
   maxPlacementAttempts: 1000
   spawnRoomPrefab: {fileID: 11400000, guid: c0491882457ebef458db6ed3c69fad9f, type: 2}
@@ -545,7 +545,7 @@ MonoBehaviour:
   numStairs: 3
   minStairsDistance: 100
   maxStairHallwayDistance: 150
-  doReplacement: 1
+  doReplacement: 0
 --- !u!4 &1437203584
 Transform:
   m_ObjectHideFlags: 0
