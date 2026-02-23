@@ -50,6 +50,8 @@ namespace FPController
         [SerializeField] private float _maxCameraY = 90f;
         #endregion
 
+        public bool LockMovement = false;
+
         #region Events
         public event Action OnBeforeMove;
         public event Action<bool> OnGroundStateChange;
@@ -112,14 +114,17 @@ namespace FPController
 
         private void Update()
         {
+            
             SlopeCheck();           // Slope Check and logic
             UpdateGround();         // Ground Check and logic
             UpdateGravity();        // Gravity calculations
+            if (LockMovement) { return; }
             UpdateMovement();       // Movement calculations
         }
 
         private void LateUpdate()
         {
+            if (LockMovement) { return; }
             UpdateCamera();
         }
         #endregion
