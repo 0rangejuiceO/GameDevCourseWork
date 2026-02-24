@@ -1,5 +1,5 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
+using FPController;
 
 public class MiniGameHandler : MonoBehaviour
 {
@@ -8,7 +8,7 @@ public class MiniGameHandler : MonoBehaviour
     [SerializeField] private GameObject defaultMiniGame;
 
     [Header("Global Refs")]
-    [SerializeField] private FPController fpController;
+    [SerializeField] private FPController.FPController fpController;
 
     public void Interact()
     {
@@ -31,7 +31,7 @@ public class MiniGameHandler : MonoBehaviour
         float rand = Random.Range(0f, totalWeight);
         float cumulative = 0f;
 
-        foreach (var entry in floorNumProbability)
+        foreach (var entry in miniGames)
         {
             cumulative += entry.Value;
 
