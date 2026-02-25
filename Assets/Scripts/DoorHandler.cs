@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class DoorHandler : MonoBehaviour
 {
@@ -37,11 +38,25 @@ public class DoorHandler : MonoBehaviour
         {
             switch (door) 
             { 
-                case "Red": forwardDoor.SetActive(false); break; 
-                case "Green": backDoor.SetActive(false); break; 
-                case "Blue": leftDoor.SetActive(false); break; 
-                case "Yellow": rightDoor.SetActive(false); break; 
+                case "Red": tellDoorItsOpen(forwardDoor); break; 
+                case "Green": tellDoorItsOpen(backDoor); break; 
+                case "Blue": tellDoorItsOpen(leftDoor); break; 
+                case "Yellow": tellDoorItsOpen(rightDoor); break; 
             }
+        }
+    }
+
+    private void tellDoorItsOpen(GameObject door)
+    {
+        try
+        {
+            
+            door.GetComponent<Door>().canOpen = true;
+            Debug.Log("set canOpen to true");
+        }
+        catch (Exception e)
+        {
+            return;
         }
     }
 }
