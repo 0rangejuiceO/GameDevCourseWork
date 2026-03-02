@@ -15,6 +15,7 @@ public class DoorHandler : MonoBehaviour
     public GameObject rightDoor;
     [Header("DoorsToOpen")]
     public List<string> doorsToOpen = new List<string>();
+    [SerializeField] private GameObject doorPrefab;
 
     private void OnDrawGizmosSelected()
     {
@@ -50,8 +51,14 @@ public class DoorHandler : MonoBehaviour
     {
         try
         {
-            
-            door.GetComponent<Door>().canOpen = true;
+            Vector3 position = door.transform.position;
+            Quaternion rotation = door.transform.rotation;
+
+            var newDoor = Instantiate(doorPrefab, position, rotation);
+
+            newDoor.GetComponentInChildren<Door>().canOpen = true;
+
+            door.SetActive(false);
             Debug.Log("set canOpen to true");
         }
         catch (Exception e)

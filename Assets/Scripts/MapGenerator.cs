@@ -655,7 +655,7 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        GameObject hallway = Instantiate(hallwayPrefab.creationPrefab, mid, Quaternion.LookRotation(dir));
+        GameObject hallway = Instantiate(hallwayPrefab.creationPrefab, mid, Quaternion.LookRotation(dir),transform);
         connecterObjectLists[hallwayPrefab].Add(hallway);
 
         hallway.transform.localScale = new Vector3(hallway.transform.localScale.x, hallway.transform.localScale.y, length/hallwayBaseLength);
@@ -877,7 +877,7 @@ public class MapGenerator : MonoBehaviour
 
         Collider[] hits = Physics.OverlapBox(cornerPos, checkHalfExtents - (Vector3.one * 0.01f), Quaternion.identity);
 
-        var corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation);
+        var corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation,transform);
         connecterObjectLists[hallwayCornerPrefab].Add(corner);
         corner.name = newName;
 
@@ -920,7 +920,7 @@ public class MapGenerator : MonoBehaviour
 
         if(XScale >=5 && ZScale >=5)
         {
-            var entry = Instantiate(hallwayLargeEntryPrefab.creationPrefab, position, rotation);
+            var entry = Instantiate(hallwayLargeEntryPrefab.creationPrefab, position, rotation,transform);
             connecterObjectLists[hallwayLargeEntryPrefab].Add(entry);
             entry.name = "LargeEntry";
             entry.transform.localScale = new Vector3(XScale, hallwayHeight, ZScale);
