@@ -8,6 +8,7 @@ public class InteractChecker : MonoBehaviour
     [SerializeField]private InputActionReference interactAction;
     [SerializeField] private float openDoorForce = 5f;
     [SerializeField] private InventoryHandler inventoryHandler;
+    [SerializeField]private GameObject miniGameHandler;
     [SerializeField] private Camera playerCamera;
 
     private void OnEnable()
@@ -55,8 +56,12 @@ public class InteractChecker : MonoBehaviour
             {
                 inventoryHandler.AddItemToInventory(hit.collider.gameObject);
                 hit.collider.gameObject.SetActive(false);
+            }
+            else if(hitTag == "GameMachine")
+            {
+                miniGameHandler.SetActive(true);
 
-                
+                miniGameHandler.GetComponent<MiniGameHandler>().StartMiniGame();
             }
         }
     }
