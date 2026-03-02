@@ -15,6 +15,7 @@ public class InventoryHandler : MonoBehaviour
     [SerializeField] private Transform inventoryUIStart;
     private GameObject[] inventorySlots;
     [SerializeField]private InputActionReference itemSlotAction;
+    [SerializeField] private InputActionReference dropItemAction;
 
 
     private void OnEnable()
@@ -22,6 +23,9 @@ public class InventoryHandler : MonoBehaviour
         itemSlotAction.action.actionMap.Enable();
         itemSlotAction.action.performed += SetActiveSlot;
         itemSlotAction.action.Enable();
+        dropItemAction.action.actionMap.Enable();
+        dropItemAction.action.performed += OnDropItem;
+        dropItemAction.action.Enable();
     }
 
     private void OnDisable()
@@ -29,6 +33,8 @@ public class InventoryHandler : MonoBehaviour
 
         itemSlotAction.action.performed -= SetActiveSlot;
         itemSlotAction.action.Disable();
+        dropItemAction.action.performed -= OnDropItem;
+        dropItemAction.action.Disable();
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -55,12 +61,21 @@ public class InventoryHandler : MonoBehaviour
         UpdateInventorySlot(newItem);
     }
 
+    private void OnDropItem(InputAction.CallbackContext context)
+    {
+        DropItem(currentInventory[currentSlot]);
+        inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName("");
+        currentInventory[currentSlot] = null;
+    }
+
     private void DropItem(GameObject itemToDrop)
     {
         Vector3 spawnLocation = transform.position + (transform.forward * spawnOffset);
 
         var newItem = Instantiate(itemToDrop, spawnLocation, Quaternion.identity);
         newItem.SetActive(true);
+        newItem.name=itemToDrop.name;
+        Destroy(itemToDrop);
     }
 
     private void createInventoryUI()

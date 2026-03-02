@@ -55,6 +55,8 @@ public class InteractChecker : MonoBehaviour
             {
                 inventoryHandler.AddItemToInventory(hit.collider.gameObject);
                 hit.collider.gameObject.SetActive(false);
+
+                
             }
         }
     }

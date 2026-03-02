@@ -2483,6 +2483,7 @@ MonoBehaviour:
   inventorySlotPrefab: {fileID: 3158880364296345012, guid: 4c72a0487275c0c408be825f76092d71, type: 3}
   inventoryUIStart: {fileID: 1667284726}
   itemSlotAction: {fileID: -9155237980119888881, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  dropItemAction: {fileID: -319944743782707436, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &1922563147
 GameObject:
   m_ObjectHideFlags: 0
