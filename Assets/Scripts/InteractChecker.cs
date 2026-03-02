@@ -7,6 +7,8 @@ public class InteractChecker : MonoBehaviour
     [SerializeField]private float rayDistance = 100f;
     [SerializeField]private InputActionReference interactAction;
     [SerializeField] private float openDoorForce = 5f;
+    [SerializeField] private InventoryHandler inventoryHandler;
+    [SerializeField] private Camera playerCamera;
 
     private void OnEnable()
     {
@@ -29,7 +31,7 @@ public class InteractChecker : MonoBehaviour
 
     private void Interact()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, rayDistance))
@@ -48,6 +50,11 @@ public class InteractChecker : MonoBehaviour
                 {
                     return;
                 }
+            }
+            else if(hitTag == "Item")
+            {
+                inventoryHandler.AddItemToInventory(hit.collider.gameObject);
+                hit.collider.gameObject.SetActive(false);
             }
         }
     }

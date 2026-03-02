@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class InventoryHandler : MonoBehaviour
 {
@@ -6,10 +8,28 @@ public class InventoryHandler : MonoBehaviour
 
     private GameObject[] currentInventory;
     private int itemsInInventory;
+    private int previousSlot = 0;
     private int currentSlot = 0;
     [SerializeField] private float spawnOffset;
     [SerializeField] private GameObject inventorySlotPrefab;
     [SerializeField] private Transform inventoryUIStart;
+    private GameObject[] inventorySlots;
+    [SerializeField]private InputActionReference itemSlotAction;
+
+
+    private void OnEnable()
+    {
+        itemSlotAction.action.actionMap.Enable();
+        itemSlotAction.action.performed += SetActiveSlot;
+        itemSlotAction.action.Enable();
+    }
+
+    private void OnDisable()
+    {
+
+        itemSlotAction.action.performed -= SetActiveSlot;
+        itemSlotAction.action.Disable();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,19 +39,20 @@ public class InventoryHandler : MonoBehaviour
         {
             currentInventory[i] = null;
         }
+
+        inventorySlots = new GameObject[inventorySize];
+
+        createInventoryUI();
     }
 
     public void AddItemToInventory(GameObject newItem)
     {
-        if (currentInventory[currentSlot] == null)
-        {
-            currentInventory[currentSlot] = newItem;
-        }
-        else
+        if (currentInventory[currentSlot] != null)
         {
             DropItem(currentInventory[currentSlot]);
-            currentInventory[currentSlot] = newItem;
         }
+        currentInventory[currentSlot] = newItem;
+        UpdateInventorySlot(newItem);
     }
 
     private void DropItem(GameObject itemToDrop)
@@ -39,15 +60,42 @@ public class InventoryHandler : MonoBehaviour
         Vector3 spawnLocation = transform.position + (transform.forward * spawnOffset);
 
         var newItem = Instantiate(itemToDrop, spawnLocation, Quaternion.identity);
+        newItem.SetActive(true);
     }
 
     private void createInventoryUI()
     {
-        for(int i = 0; i < inventorySize; i++)
+        for (int i = 0; i < inventorySize; i++)
         {
-            Vector3 location = new Vector3(inventoryUIStart.transform.position.x + 125,inventoryUIStart.transform.position.y, inventoryUIStart.transform.position.z);
+            Vector3 location = new Vector3(inventoryUIStart.transform.position.x + (i* 125), inventoryUIStart.transform.position.y, inventoryUIStart.transform.position.z);
             var newSlot = Instantiate(inventorySlotPrefab, location, Quaternion.identity, inventoryUIStart);
+            RectTransform rt = newSlot.GetComponent<RectTransform>();
+
+            Vector2 pos = rt.anchoredPosition;
+            pos.x = location.x;
+            rt.anchoredPosition = pos;
+
+
+            newSlot.GetComponent<InventorySlot>().SetNum(i + 1);
+            newSlot.GetComponent<InventorySlot>().SetItemName("");
+            inventorySlots[i] = newSlot;
         }
+    
+    }
+
+    private void SetActiveSlot(InputAction.CallbackContext context)
+    {
+        
+        float value = context.ReadValue<float>();
+        previousSlot = currentSlot;
+        currentSlot = Mathf.RoundToInt(value)-1;
+        Debug.Log($"Current Slot {currentSlot+1}");
+    }
+
+
+    private void UpdateInventorySlot(GameObject newItem)
+    {
+        inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName(newItem.name);
     }
 
 }
