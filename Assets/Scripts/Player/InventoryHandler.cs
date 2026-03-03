@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using FPController;
 
 public class InventoryHandler : MonoBehaviour
 {
@@ -18,6 +18,7 @@ public class InventoryHandler : MonoBehaviour
     [SerializeField] private InputActionReference dropItemAction;
     [SerializeField] private Transform camera;
     [SerializeField] private Vector3 cameraOffset;
+    [SerializeField]private FPController.FPController playerController;
 
 
     private void OnEnable()
@@ -93,6 +94,21 @@ public class InventoryHandler : MonoBehaviour
         Destroy(itemToDrop);
     }
 
+    public void DropItem(GameObject itemToDrop, bool destoryItem)
+    {
+
+        inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName("");
+        currentInventory[currentSlot] = null;
+        if (destoryItem)
+        {
+            Destroy(itemToDrop);
+        }
+        else
+        {
+            DropItem(itemToDrop);
+        }
+    }
+
     private void createInventoryUI()
     {
         for (int i = 0; i < inventorySize; i++)
@@ -115,10 +131,22 @@ public class InventoryHandler : MonoBehaviour
 
     private void SetActiveSlot(InputAction.CallbackContext context)
     {
-        
+        if(playerController.LockMovement)
+        {
+            return;
+        }
+
+
         float value = context.ReadValue<float>();
+        int newSlot = Mathf.RoundToInt(value)-1;
+
+        if(newSlot >= inventorySlots.Length)
+        {
+            return;
+        }
+
         previousSlot = currentSlot;
-        currentSlot = Mathf.RoundToInt(value)-1;
+        currentSlot = newSlot;
         Debug.Log($"Current Slot {currentSlot+1}");
 
         if (currentInventory[previousSlot] != null)
@@ -136,7 +164,8 @@ public class InventoryHandler : MonoBehaviour
 
     private void UpdateInventorySlot(GameObject newItem)
     {
-        inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName(newItem.name);
+        string itemName = newItem.GetComponent<ItemName>().actualName;
+        inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName(itemName);
     }
 
 }

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2959659297985839073}
   - component: {fileID: 3365084386358745473}
   - component: {fileID: 7650915319699408352}
+  - component: {fileID: 7386216190581119080}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Item
@@ -140,3 +141,16 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &7386216190581119080
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2374202794383667280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac131ee8126b4a44a4f7ce4182bb9ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemName
+  actualName: Debug Cyllinder

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1092414913841943123}
   - component: {fileID: 317940166496417579}
   - component: {fileID: 3438999358015764555}
+  - component: {fileID: 919454155162479354}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Item
@@ -141,3 +142,16 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &919454155162479354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651429719672296792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac131ee8126b4a44a4f7ce4182bb9ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemName
+  actualName: Debug Capsule

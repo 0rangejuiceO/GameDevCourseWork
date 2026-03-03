@@ -5,14 +5,23 @@ using static UnityEditor.FilePathAttribute;
 public class MiniGameHandler : MonoBehaviour
 {
     [Header("MiniGame Settings")]
+    [Space(15)]
     [SerializeField] private GameObjectFloatDictionary miniGames = new GameObjectFloatDictionary();
+    [Space(20)]
     [SerializeField] private GameObject defaultMiniGame;
+
+    [Header("Loot Table")]
+    [Space(15)]
+    [SerializeField]private GameObjectFloatDictionary lootTable = new GameObjectFloatDictionary();
+    [Space(20)]
+    [SerializeField] private GameObject defaultReward;
 
     [Header("Global Refs")]
     [SerializeField] private FPController.FPController fpController;
     [SerializeField] private Transform canvas;
 
     private GameObject currentMiniGame;
+    private GameObject machine;
     public void Interact()
     {
         fpController.LockMovement = true;
@@ -23,7 +32,7 @@ public class MiniGameHandler : MonoBehaviour
         fpController.LockMovement = false;
     }
 
-    public void StartMiniGame()
+    public void StartMiniGame(GameObject usedMachine)
     {
         GameObject game = SelectMiniGame();
         var newGame = Instantiate(game, transform.position, Quaternion.identity,canvas);
@@ -35,7 +44,7 @@ public class MiniGameHandler : MonoBehaviour
         Interact();
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
-
+        machine = usedMachine;
         currentMiniGame = newGame;
     }
 
@@ -72,6 +81,42 @@ public class MiniGameHandler : MonoBehaviour
         Cursor.visible = false;
         gameObject.SetActive(false);
         Destroy(currentMiniGame);
+
+        if (win)
+        {
+            var rewardItem = SelectReward();
+            Transform location = machine.GetComponent<GameMachineOutputMarker>().outputLocation;
+            Instantiate(rewardItem, location.position, Quaternion.identity);
+
+        }
+
+    }
+
+
+    private GameObject SelectReward()
+    {
+        float totalWeight = 0f;
+        foreach (float weight in lootTable.Values)
+        {
+            totalWeight += weight;
+        }
+
+        float rand = Random.Range(0f, totalWeight);
+        float cumulative = 0f;
+
+        foreach (var entry in lootTable)
+        {
+            cumulative += entry.Value;
+
+            if (rand <= cumulative)
+            {
+                Debug.Log($"Selected mini game {entry.Key.name}");
+                return entry.Key;
+            }
+        }
+
+        return defaultReward;
+
     }
 
 }

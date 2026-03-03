@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FPController;
 
 public class DebugMenuHandler : MonoBehaviour
 {
     [SerializeField] private InputActionReference openDebugMenuAction;
     [SerializeField] private GameObject debugMenuObject;
+    [SerializeField]private FPController.FPController playerController;
 
     private bool menuIsOpen = false;
 
@@ -36,6 +38,7 @@ public class DebugMenuHandler : MonoBehaviour
             Debug.Log("Debug Menu Closed");
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            playerController.LockMovement = false;
         }
         else
         {
@@ -44,6 +47,8 @@ public class DebugMenuHandler : MonoBehaviour
             Debug.Log("Debug Menu Opened");
             Cursor.lockState = CursorLockMode.Confined;
             Cursor.visible =true;
+            playerController.LockMovement = true;
         }
+
     }
 }

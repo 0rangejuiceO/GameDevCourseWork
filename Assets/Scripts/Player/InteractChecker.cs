@@ -61,7 +61,7 @@ public class InteractChecker : MonoBehaviour
             {
                 miniGameHandler.SetActive(true);
 
-                miniGameHandler.GetComponent<MiniGameHandler>().StartMiniGame();
+                miniGameHandler.GetComponent<MiniGameHandler>().StartMiniGame(hit.collider.gameObject);
             }
         }
     }
