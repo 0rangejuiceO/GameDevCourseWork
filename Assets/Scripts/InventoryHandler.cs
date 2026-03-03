@@ -16,6 +16,8 @@ public class InventoryHandler : MonoBehaviour
     private GameObject[] inventorySlots;
     [SerializeField]private InputActionReference itemSlotAction;
     [SerializeField] private InputActionReference dropItemAction;
+    [SerializeField] private Transform camera;
+    [SerializeField] private Vector3 cameraOffset;
 
 
     private void OnEnable()
@@ -53,12 +55,22 @@ public class InventoryHandler : MonoBehaviour
 
     public void AddItemToInventory(GameObject newItem)
     {
+        var realNewItem = Instantiate(newItem, new Vector3(0,100,0), Quaternion.identity);
+        realNewItem.SetActive(false);
+        Rigidbody rb = realNewItem.GetComponent<Rigidbody>();
+        rb.isKinematic = true;
+        rb.useGravity = false;
+        realNewItem.transform.parent = camera;
+        realNewItem.transform.localPosition = cameraOffset;
+        realNewItem.transform.localRotation = Quaternion.identity;
+
+
         if (currentInventory[currentSlot] != null)
         {
             DropItem(currentInventory[currentSlot]);
         }
-        currentInventory[currentSlot] = newItem;
-        UpdateInventorySlot(newItem);
+        currentInventory[currentSlot] = realNewItem;
+        UpdateInventorySlot(realNewItem);
     }
 
     private void OnDropItem(InputAction.CallbackContext context)
@@ -70,11 +82,14 @@ public class InventoryHandler : MonoBehaviour
 
     private void DropItem(GameObject itemToDrop)
     {
-        Vector3 spawnLocation = transform.position + (transform.forward * spawnOffset);
-
-        var newItem = Instantiate(itemToDrop, spawnLocation, Quaternion.identity);
+        Vector3 spawnLocation = camera.position + (camera.forward * spawnOffset);
+        Quaternion rotation = Quaternion.LookRotation(camera.forward);
+        var newItem = Instantiate(itemToDrop, spawnLocation, rotation);
         newItem.SetActive(true);
         newItem.name=itemToDrop.name;
+        Rigidbody rb = newItem.GetComponent<Rigidbody>();
+        rb.isKinematic = false;
+        rb.useGravity = true;
         Destroy(itemToDrop);
     }
 
@@ -105,6 +120,17 @@ public class InventoryHandler : MonoBehaviour
         previousSlot = currentSlot;
         currentSlot = Mathf.RoundToInt(value)-1;
         Debug.Log($"Current Slot {currentSlot+1}");
+
+        if (currentInventory[previousSlot] != null)
+        {
+            currentInventory[previousSlot].SetActive(false);
+        }
+
+        if (currentInventory[currentSlot] != null)
+        {
+            currentInventory[currentSlot].SetActive(true);
+        }
+
     }
 
 
