@@ -109,6 +109,11 @@ public class InventoryHandler : MonoBehaviour
         }
     }
 
+    public GameObject GetCurrentItem()
+    {
+        return currentInventory[currentSlot];
+    }
+
     private void createInventoryUI()
     {
         for (int i = 0; i < inventorySize; i++)

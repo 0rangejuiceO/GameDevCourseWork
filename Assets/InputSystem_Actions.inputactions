@@ -39,7 +39,7 @@
                     "id": "852140f2-7766-474d-8707-702459ba45f3",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold,Press",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
@@ -112,6 +112,15 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HoldInteract",
+                    "type": "Button",
+                    "id": "1e4e935e-c307-4a7f-87b7-9098703518c4",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Hold",
                     "initialStateCheck": false
                 }
             ],
@@ -575,6 +584,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "HoldRightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a866f76b-2909-41c2-8273-4f6e42a29eab",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HoldInteract",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

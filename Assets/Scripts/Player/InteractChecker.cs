@@ -6,6 +6,7 @@ public class InteractChecker : MonoBehaviour
 {
     [SerializeField]private float rayDistance = 100f;
     [SerializeField]private InputActionReference interactAction;
+    [SerializeField] private InputActionReference holdInteractAction;
     [SerializeField] private float openDoorForce = 5f;
     [SerializeField] private InventoryHandler inventoryHandler;
     [SerializeField]private GameObject miniGameHandler;
@@ -16,6 +17,10 @@ public class InteractChecker : MonoBehaviour
         interactAction.action.actionMap.Enable();
         interactAction.action.performed += OnInteract;
         interactAction.action.Enable();
+
+        holdInteractAction.action.actionMap.Enable();
+        holdInteractAction.action.performed += OnHoldInteract;
+        holdInteractAction.action.Enable();
     }
 
     private void OnDisable()
@@ -23,11 +28,19 @@ public class InteractChecker : MonoBehaviour
         
         interactAction.action.performed -= OnInteract;
         interactAction.action.Disable();
+
+        holdInteractAction.action.performed -= OnHoldInteract;
+        holdInteractAction.action.Disable();
     }
 
     private void OnInteract(InputAction.CallbackContext  context)
     {
         Interact();
+    }
+
+    private void OnHoldInteract(InputAction.CallbackContext context)
+    {
+        HoldInteract();
     }
 
     private void Interact()
@@ -65,6 +78,51 @@ public class InteractChecker : MonoBehaviour
             }
         }
     }
+
+    private void HoldInteract()
+    {
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hit;
+        Debug.Log("Using hold interact");
+        if (Physics.Raycast(ray, out hit, rayDistance))
+        {
+            string hitTag = hit.collider.gameObject.tag;
+            string hitName = hit.collider.gameObject.name;
+
+            if (hitTag == "Door")
+            {
+                Debug.Log("Found door");
+                try
+                {
+                    GameObject currentItem = inventoryHandler.GetCurrentItem();
+
+                    if(currentItem != null)
+                    {
+                        Debug.Log($"{currentItem.name}");
+                        if(currentItem.name.Contains("Key"))
+                        {
+                            Debug.Log("Has Key");
+                            if (hit.collider.gameObject.GetComponent<Door>().isLocked)
+                            {
+                                hit.collider.gameObject.GetComponent<Door>().isLocked = false;
+                                hit.collider.gameObject.GetComponent<Door>().rb.isKinematic = false;
+                                inventoryHandler.DropItem(currentItem,true);
+
+                            }
+                        }
+
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+
 
 
 }

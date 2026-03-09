@@ -1026,6 +1026,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteractChecker
   rayDistance: 5
   interactAction: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  holdInteractAction: {fileID: -8706834609516092693, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   openDoorForce: 2
   inventoryHandler: {fileID: 2122138533}
   miniGameHandler: {fileID: 1030552996}
@@ -3480,6 +3481,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 06dbe94a7120d9f4090d8352d8cb7f6a, type: 2}
   - {fileID: 11400000, guid: 779e78fccba9f7d45884df217111eb67, type: 2}
   - {fileID: 11400000, guid: 69147599dc8d99a438bc78915b5f1e2d, type: 2}
+  - {fileID: 11400000, guid: dcec8bc214237d14ca0fcaedc5b22f97, type: 2}
   player: {fileID: 2122138519}
   itemList: {fileID: 778021498}
   spawnOffset: 2
