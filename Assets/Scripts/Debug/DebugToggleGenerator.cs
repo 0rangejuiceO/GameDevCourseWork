@@ -1,16 +1,16 @@
 using UnityEngine;
 
+
 public class DebugToggleGenerator : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+
+    public void TogglePower(bool isOn)
     {
-        
+        Generator.SetGeneratorPower(isOn);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void ToggleStatus(bool status)
     {
-        
+        Generator.SetGeneratorBroken(status);
     }
 }

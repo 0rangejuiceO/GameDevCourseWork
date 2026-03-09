@@ -4,19 +4,21 @@ using UnityEngine;
 public class Generator : MonoBehaviour
 {
     public bool isOn;
-    public bool isBroken = false;
+    public static bool isBroken = false;
 
     public static event Action<bool> OnGeneratorStateChanged;
     public static event Action<bool> OnGeneratorBrokenStatusChanged;
 
     void OnEnable()
     {
-        Generator.OnGeneratorStateChanged += HandleGeneratorState;
+        Generator.OnGeneratorStateChanged += HandleGeneratorPower;
+        Generator.OnGeneratorBrokenStatusChanged += HandleGeneratorState;
     }
 
     void OnDisable()
     {
-        Generator.OnGeneratorStateChanged -= HandleGeneratorState;
+        Generator.OnGeneratorStateChanged -= HandleGeneratorPower;
+        Generator.OnGeneratorBrokenStatusChanged -= HandleGeneratorState;
     }
 
     void HandleGeneratorState(bool state)
@@ -30,16 +32,22 @@ public class Generator : MonoBehaviour
 
     }
 
+    private void HandleGeneratorPower(bool power)
+    {
+        isOn = power;
+    }
+
+
     public void TurnOn()
     {
-        isOn = true;
-        OnGeneratorStateChanged?.Invoke(isOn);
+        
+        OnGeneratorStateChanged?.Invoke(true);
     }
 
     public void TurnOff()
     {
-        isOn = false;
-        OnGeneratorStateChanged?.Invoke(isOn);
+
+        OnGeneratorStateChanged?.Invoke(false);
     }
 
     public void FlipState()
@@ -47,7 +55,6 @@ public class Generator : MonoBehaviour
         if (isOn)
         {
             TurnOff();
-            isOn = false;
 
         }
         else
@@ -55,7 +62,6 @@ public class Generator : MonoBehaviour
             if (!isBroken)
             {
                 TurnOn();
-                isOn = true;
             }
 
         }
@@ -69,11 +75,27 @@ public class Generator : MonoBehaviour
         {
             return;
         }
+
         int num = UnityEngine.Random.Range(1, powerFailChance);
         if (num == 1)
         {
             TurnOff();
-            isOn = false;
         }
     }
+
+    public static void SetGeneratorPower(bool state)
+    {
+        OnGeneratorStateChanged?.Invoke(state);
+    }
+
+    public static void SetGeneratorBroken(bool state)
+    {
+        OnGeneratorBrokenStatusChanged?.Invoke(state);
+    }
+
+    public static bool GetGeneratorBroken()
+    {
+        return isBroken;
+    }
+
 }

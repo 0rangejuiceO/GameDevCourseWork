@@ -87,42 +87,56 @@ public class InteractChecker : MonoBehaviour
     {
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
-        Debug.Log("Using hold interact");
         if (Physics.Raycast(ray, out hit, rayDistance))
         {
             string hitTag = hit.collider.gameObject.tag;
             string hitName = hit.collider.gameObject.name;
 
-            if (hitTag == "Door")
+            try
             {
-                Debug.Log("Found door");
-                try
-                {
-                    GameObject currentItem = inventoryHandler.GetCurrentItem();
+                GameObject currentItem = inventoryHandler.GetCurrentItem();
 
-                    if(currentItem != null)
+                if (currentItem != null)
+                {
+                    Debug.Log($"{currentItem.name}");
+                    if (hitTag == "Door")
                     {
-                        Debug.Log($"{currentItem.name}");
-                        if(currentItem.name.Contains("Key"))
+
+                        if (currentItem.name.Contains("Key"))
                         {
-                            Debug.Log("Has Key");
+
                             if (hit.collider.gameObject.GetComponent<Door>().isLocked)
                             {
                                 hit.collider.gameObject.GetComponent<Door>().isLocked = false;
                                 hit.collider.gameObject.GetComponent<Door>().rb.isKinematic = false;
-                                inventoryHandler.DropItem(currentItem,true);
+                                inventoryHandler.DropItem(currentItem, true);
 
                             }
                         }
-
+                    }
+                    else if(hitTag == "Generator")
+                    {
+                        if (currentItem.name.Contains("Generator"))
+                        {
+                            if (Generator.GetGeneratorBroken())
+                            {
+                                Generator.SetGeneratorBroken(false);
+                                inventoryHandler.DropItem(currentItem, true);
+                            }
+                        }
                     }
 
+
+
                 }
-                catch (Exception e)
-                {
-                    return;
-                }
+
             }
+            catch (Exception e)
+            {
+                return;
+            }
+
+
         }
     }
 
