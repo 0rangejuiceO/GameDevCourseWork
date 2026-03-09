@@ -3536,7 +3536,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -312, y: -340}
+  m_AnchoredPosition: {x: -850, y: -300}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1764321906
@@ -4197,6 +4197,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 779e78fccba9f7d45884df217111eb67, type: 2}
   - {fileID: 11400000, guid: 69147599dc8d99a438bc78915b5f1e2d, type: 2}
   - {fileID: 11400000, guid: dcec8bc214237d14ca0fcaedc5b22f97, type: 2}
+  - {fileID: 11400000, guid: 8ce79dfe85c62b245bfb8ed624b9d996, type: 2}
+  - {fileID: 11400000, guid: fd1b0867b6a0463418451a6e5ba27245, type: 2}
   player: {fileID: 2122138519}
   itemList: {fileID: 778021498}
   spawnOffset: 2
