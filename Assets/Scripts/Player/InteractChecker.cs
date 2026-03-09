@@ -76,6 +76,10 @@ public class InteractChecker : MonoBehaviour
 
                 miniGameHandler.GetComponent<MiniGameHandler>().StartMiniGame(hit.collider.gameObject);
             }
+            else if( hitTag == "Generator")
+            {
+                hit.collider.gameObject.GetComponent<Generator>().FlipState();
+            }
         }
     }
 

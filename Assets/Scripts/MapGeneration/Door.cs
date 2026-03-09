@@ -5,7 +5,7 @@ public class Door : MonoBehaviour
     public bool canOpen = false;
     public bool isLocked = false;
     public Rigidbody rb;
-    private int lockedChance = 2; //1 in 100 chance
+    private int lockedChance = 20; //1 in 20 chance
 
     private void Awake()
     {

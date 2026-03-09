@@ -139,6 +139,7 @@ GameObject:
   - component: {fileID: 5519018877491689625}
   - component: {fileID: 9117811039863355531}
   - component: {fileID: 6279089862707143035}
+  - component: {fileID: 3461719027654350011}
   m_Layer: 0
   m_Name: CeilingLight
   m_TagString: Untagged
@@ -195,7 +196,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 79ddd49ae03bede4db8f7fd6d593356d, type: 2}
+  - {fileID: 2100000, guid: 9a102f0515187ff4f8e382d2624bcf8c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -239,3 +240,16 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3461719027654350011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4368013951093190758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63ce38cf1964d4c4cb0a1dab0b315312, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CeilingLight
+  lightSource: {fileID: 5532188476158764166}

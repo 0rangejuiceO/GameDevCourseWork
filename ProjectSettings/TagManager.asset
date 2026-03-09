@@ -8,6 +8,7 @@ TagManager:
   - Item
   - Floor
   - GameMachine
+  - Generator
   layers:
   - Default
   - TransparentFX
