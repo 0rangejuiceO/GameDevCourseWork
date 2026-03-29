@@ -15,7 +15,8 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private int maxPlacementAttempts = 1000;
     [SerializeField] private RoomType spawnRoomPrefab;
     [Space(20)]
-    [SerializeField]private IntFloatDictionary floorNumProbability= new IntFloatDictionary()
+    [SerializeField]
+    private IntFloatDictionary floorNumProbability = new IntFloatDictionary()
     {
         {1, 0.07f},
         {2, 0.18f},
@@ -33,13 +34,13 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] private ConnecterType hallwayFourJunctionPrefab;
     [SerializeField] private float hallwayWidth = 5f;
     [SerializeField] private float hallwayHeight = 5f;
-    [SerializeField] private float hallwayBaseLength=5f;
+    [SerializeField] private float hallwayBaseLength = 5f;
     [SerializeField] private RoomType stairSegment;
     [SerializeField] private int stairSegmentHeight;
     [SerializeField] private int numStairs;
     [SerializeField] private int minStairsDistance;
     [SerializeField] private int maxStairHallwayDistance;
-    [SerializeField] private bool doReplacement=false;
+    public bool doReplacement = false;
 
 
 
@@ -47,17 +48,41 @@ public class MapGenerator : MonoBehaviour
     private Dictionary<RoomType, List<GameObject>> actualRoomObjectLists = new Dictionary<RoomType, List<GameObject>>();
     private List<GameObject> stairsList = new List<GameObject>();
     private Dictionary<int, int> floorYPositions;
-    private int totalRoomsNum=0;
+    private int totalRoomsNum = 0;
     private int numFloors = 0;
     private int spawnFloor = 0;
     private int floorHeightZero = 0;
-    private bool stairsInverted= false;
+    private bool stairsInverted = false;
     private GameObject spawnRoom;
     private Dictionary<ConnecterType, List<GameObject>> connecterObjectLists = new Dictionary<ConnecterType, List<GameObject>>();
     private Dictionary<int, List<RoomNode>> floorRooms = new Dictionary<int, List<RoomNode>>();
 
     public async Task<bool> BeginMapGeneration()
     {
+
+
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        await Task.Yield();
+
+        Physics.SyncTransforms();
+
+        roomObjectLists = new Dictionary<RoomType, List<GameObject>>();
+        actualRoomObjectLists = new Dictionary<RoomType, List<GameObject>>();
+        stairsList = new List<GameObject>();
+        floorYPositions = new Dictionary<int, int>();
+        totalRoomsNum = 0;
+        numFloors = 0;
+        spawnFloor = 0;
+        floorHeightZero = 0;
+        stairsInverted = false;
+        spawnRoom = null;
+        connecterObjectLists = new Dictionary<ConnecterType, List<GameObject>>();
+        floorRooms = new Dictionary<int, List<RoomNode>>();
+
         totalRoomsNum = roomPrefabs.Values.Sum();
 
         foreach (RoomType key in roomPrefabs.Keys)
@@ -111,7 +136,15 @@ public class MapGenerator : MonoBehaviour
         {
             MakeStairHallway();
         }
-        MakeHallways();
+        bool failed = MakeHallways();
+
+        if (failed)
+        {
+            Debug.LogError("Failed to create hallways");
+
+
+            return false;
+        }
 
         if (doReplacement)
         {
@@ -123,7 +156,7 @@ public class MapGenerator : MonoBehaviour
         await Task.Yield();
         Debug.Log("Map Generation Complete");
 
-        return doReplacement;
+        return true;
     }
 
     private void DoReplacement()
@@ -141,12 +174,12 @@ public class MapGenerator : MonoBehaviour
         List<string> doorsToOpen = spawnRoom.GetComponent<DoorHandler>().doorsToOpen;
         Destroy(spawnRoom);
         var newRoom = Instantiate(spawnRoomPrefab.actualPrefab, position, rotation, parent);
-        spawnRoom=newRoom;
+        spawnRoom = newRoom;
         newRoom.GetComponent<DoorHandler>().doorsToOpen = doorsToOpen;
 
         foreach (var roomList in roomObjectLists)
         {
-            foreach(GameObject room in roomList.Value)
+            foreach (GameObject room in roomList.Value)
             {
                 position = room.transform.position;
                 rotation = room.transform.rotation;
@@ -168,7 +201,7 @@ public class MapGenerator : MonoBehaviour
             {
                 position = connecter.transform.position;
                 rotation = connecter.transform.rotation;
-                Vector3 scale = connecter.transform.localScale; 
+                Vector3 scale = connecter.transform.localScale;
                 parent = connecter.transform.parent;
                 LargeEntryCreationHandler creationHandler = null;
                 if (connecter.name.Contains("LargeEntry"))
@@ -177,7 +210,7 @@ public class MapGenerator : MonoBehaviour
                 }
                 Destroy(connecter);
                 var newConnecter = Instantiate(connecterList.Key.actualPrefab, position, rotation, parent);
-                
+
                 float x = scale.x / originalScale.x;
                 float y = scale.y / originalScale.y;
                 float z = scale.z / originalScale.z;
@@ -186,12 +219,12 @@ public class MapGenerator : MonoBehaviour
 
                 //Debug.Log($"Original Scale: {originalScale}, Current Scale: {scale}, New Scale: {newScale}");
 
-                if (connecter.name.Contains("LargeEntry") && creationHandler !=null)
+                if (connecter.name.Contains("LargeEntry") && creationHandler != null)
                 {
                     LargeEntryHandler handler = newConnecter.GetComponent<LargeEntryHandler>();
                     handler.scaler.localScale = newScale;
-                    handler.setDoorFrameScale(true, creationHandler.entryLocation, creationHandler.direction); 
-                    
+                    handler.setDoorFrameScale(true, creationHandler.entryLocation, creationHandler.direction);
+
                     handler.setDoorFrameScale(false, creationHandler.exitLocation, creationHandler.direction * -1);
 
                 }
@@ -200,7 +233,7 @@ public class MapGenerator : MonoBehaviour
                     newConnecter.transform.localScale = newScale;
                 }
 
-                
+
             }
         }
 
@@ -237,17 +270,24 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    private void MakeHallways()
+    private bool MakeHallways()
     {
-        for(int i=1; i < numFloors + 1; i++)
+        for (int i = 1; i < numFloors + 1; i++)
         {
             var edges = GenerateMST(floorRooms[i]);
 
             foreach (var edge in edges)
             {
-                CreateHallway(edge.Item1, edge.Item2);
+                bool failed = CreateHallway(edge.Item1, edge.Item2);
+
+                if (failed)
+                {
+                    return true;
+                }
             }
         }
+
+        return false;
 
     }
 
@@ -255,13 +295,13 @@ public class MapGenerator : MonoBehaviour
     {
 
 
-        for(int i=0; i < numStairs; i++)
+        for (int i = 0; i < numStairs; i++)
         {
             //Debug.Log($"Creating Stair {i}/{numStairs}");
 
             bool placed = false;
             int attempts = 0;
-            float currentStandardDeviation = standardDeviation/10f;
+            float currentStandardDeviation = standardDeviation / 10f;
 
 
             while (!placed && (attempts < maxPlacementAttempts))
@@ -313,15 +353,15 @@ public class MapGenerator : MonoBehaviour
 
                 if (!Physics.CheckBox(snappedPosition, checkHalfExtents - (Vector3.one * 0.01f), Quaternion.identity))
                 {
-                    for(int m = 0; m < numFloors; m++)
+                    for (int m = 0; m < numFloors; m++)
                     {
-                        for(int n= 0; n < roomHeight/stairSegmentHeight; n++)
+                        for (int n = 0; n < roomHeight / stairSegmentHeight; n++)
                         {
-                            snappedPosition.y = floorYPositions[m + 1]+n*stairSegmentHeight;
+                            snappedPosition.y = floorYPositions[m + 1] + n * stairSegmentHeight;
 
                             var newStairs = Instantiate(stairSegment.roomPrefab, snappedPosition, Quaternion.identity, transform);
                             stairsList.Add(newStairs);
-                            if(n == 0)
+                            if (n == 0)
                             {
                                 floorRooms[m + 1].Add(new RoomNode(newStairs));
                             }
@@ -331,14 +371,14 @@ public class MapGenerator : MonoBehaviour
                                 newStairs.GetComponent<StairCreationHandler>().isTopStair = true;
                                 break;
                             }
-                            if(m==0 && n == 0)
+                            if (m == 0 && n == 0)
                             {
                                 newStairs.GetComponent<StairCreationHandler>().isBottomStair = true;
                             }
                         }
-                       
+
                     }
-                    
+
 
                     Physics.SyncTransforms();
                     placed = true;
@@ -411,14 +451,14 @@ public class MapGenerator : MonoBehaviour
 
         int[] floorBuckets = new int[numFloors];
 
-        int remainingRooms = totalRoomsNum - (numFloors*minRoomsPerFloor);
+        int remainingRooms = totalRoomsNum - (numFloors * minRoomsPerFloor);
 
-        for(int i =0; i < numFloors; i++)
+        for (int i = 0; i < numFloors; i++)
         {
             floorBuckets[i] = minRoomsPerFloor;
         }
 
-        for (int i =0; i < remainingRooms; i++)
+        for (int i = 0; i < remainingRooms; i++)
         {
             int randomFloor = Random.Range(0, numFloors);
 
@@ -438,7 +478,7 @@ public class MapGenerator : MonoBehaviour
         Shuffle(roomTypes);
 
         int currentFloor = 0;
-        foreach(RoomType room in roomTypes)
+        foreach (RoomType room in roomTypes)
         {
             bool placed = false;
             int attempts = 0;
@@ -447,7 +487,7 @@ public class MapGenerator : MonoBehaviour
             {
                 attempts++;
 
-                if(attempts >= maxPlacementAttempts)
+                if (attempts >= maxPlacementAttempts)
                 {
                     Debug.LogWarning($"Failed to place {room.displayName} after {maxPlacementAttempts} attempts.");
                     break;
@@ -459,7 +499,7 @@ public class MapGenerator : MonoBehaviour
                 float clampedX = Mathf.Clamp(Mathf.Round(rawX), -mapSize.x / 2, mapSize.x / 2);
                 float clampedZ = Mathf.Clamp(Mathf.Round(rawZ), -mapSize.y / 2, mapSize.y / 2);
 
-                if(new Vector2(clampedX, clampedZ).magnitude < room.minDistanceFromSpawn)
+                if (new Vector2(clampedX, clampedZ).magnitude < room.minDistanceFromSpawn)
                 {
                     //Debug.Log($"Attempt {attempts}: Position too close to spawn ("+clampedX+","+clampedZ + "), sd "+currentStandardDeviation+" retrying...");
                     currentStandardDeviation *= 1.05f;
@@ -471,16 +511,16 @@ public class MapGenerator : MonoBehaviour
                 bool tooCloseToSameType = false;
                 if (roomObjectLists[room].Count > 0)
                 {
-                    foreach(GameObject existingRoom in roomObjectLists[room])
+                    foreach (GameObject existingRoom in roomObjectLists[room])
                     {
-                        if(Vector3.Distance(existingRoom.transform.position, snappedPosition) < room.minDistanceFromSameType)
+                        if (Vector3.Distance(existingRoom.transform.position, snappedPosition) < room.minDistanceFromSameType)
                         {
                             tooCloseToSameType = true;
                         }
                     }
                 }
 
-                if(tooCloseToSameType)
+                if (tooCloseToSameType)
                 {
                     //Debug.Log($"Attempt {attempts}: Position too close to same type (" + clampedX + "," + clampedZ + "), sd " + currentStandardDeviation + " retrying...");
                     currentStandardDeviation *= 1.05f;
@@ -490,7 +530,7 @@ public class MapGenerator : MonoBehaviour
                 if (floorBuckets[currentFloor] <= 0)
                 {
                     currentFloor++;
-                    if(currentFloor >= numFloors)
+                    if (currentFloor >= numFloors)
                     {
                         Debug.LogWarning("All floors are full, but there are still rooms to place.");
                         break;
@@ -500,15 +540,15 @@ public class MapGenerator : MonoBehaviour
                 snappedPosition.y = floorYPositions[currentFloor + 1];
 
                 Vector3 checkHalfExtents = (room.roomPrefab.transform.localScale / 2) + (Vector3.one * minHallwayGap);
-            
 
 
 
-                if(!Physics.CheckBox(snappedPosition, checkHalfExtents - (Vector3.one * 0.01f), Quaternion.identity))
+
+                if (!Physics.CheckBox(snappedPosition, checkHalfExtents - (Vector3.one * 0.01f), Quaternion.identity))
                 {
-                    var newRoom = Instantiate(room.roomPrefab, snappedPosition, Quaternion.identity,transform);
+                    var newRoom = Instantiate(room.roomPrefab, snappedPosition, Quaternion.identity, transform);
                     roomObjectLists[room].Add(newRoom);
-                    floorRooms[currentFloor+1].Add(new RoomNode(newRoom));
+                    floorRooms[currentFloor + 1].Add(new RoomNode(newRoom));
 
                     Physics.SyncTransforms();
                     placed = true;
@@ -567,7 +607,7 @@ public class MapGenerator : MonoBehaviour
         {
             cumulative += entry.Value;
 
-            if (rand <= cumulative) 
+            if (rand <= cumulative)
             {
                 Debug.Log($"Selected number of floors: {entry.Key}");
                 return entry.Key;
@@ -628,46 +668,208 @@ public class MapGenerator : MonoBehaviour
     }
 
 
-    void CreateStraightHallway(Vector3 start, Vector3 end)
+    private bool CreateStraightHallway(Vector3 start, Vector3 end)
     {
         Vector3 dir = end - start;
         float length = dir.magnitude;
 
         if (length < 0.1f)
-            return;
+            return true;
 
         Vector3 mid = (start + end) * 0.5f;
         Quaternion rotation = Quaternion.LookRotation(dir);
 
 
         Vector3 checkHalfExtents = new Vector3(
-            (hallwayPrefab.creationPrefab.transform.localScale.x * 0.5f) + minHallwayGap,
-            (hallwayPrefab.creationPrefab.transform.localScale.y * 0.5f) + minHallwayGap,
+            (hallwayPrefab.creationPrefab.transform.localScale.x),
+            (hallwayPrefab.creationPrefab.transform.localScale.y),
             (length * 0.5f) // Half the calculated length
         );
 
-        Collider[] hits = Physics.OverlapBox(mid, checkHalfExtents - (Vector3.one * 0.01f), rotation);
+        float hallwayXScale = hallwayPrefab.creationPrefab.transform.localScale.x / 2;
+        float hallwayZScale = hallwayPrefab.creationPrefab.transform.localScale.z / 2;
 
-        if (hits.Length > 0) {
+        Collider[] hits = Physics.OverlapBox(mid, checkHalfExtents - (Vector3.one * 0.1f), rotation);
+
+        bool cornerOverlap = false, dontCreate = false;
+        Vector3 cornerOverlapPosition = Vector3.zero;
+
+        string holdLog = "";
+
+        if (hits.Length > 0)
+        {
             foreach (Collider col in hits)
             {
-                Debug.Log($"Overlap detected with: {col.gameObject.name} at {col.transform.position}");
+                holdLog += ($"\nOverlap detected with: {col.gameObject.name} at {col.transform.position} from Hallway at {mid}");
+
+
+
+                float roomXScale = col.gameObject.transform.localScale.x / 2;
+                float roomZScale = col.gameObject.transform.localScale.z / 2;
+
+                float roomXTop = col.transform.position.x + roomXScale;
+                float roomXBottom = col.transform.position.x - roomXScale;
+
+                float roomZLeft = col.transform.position.z + roomZScale;
+                float roomZRight = col.transform.position.z - roomZScale;
+
+                float hallwayXTop = 0, hallwayXBottom = 0, hallwayZLeft = 0, hallwayZRight = 0;
+
+                if (rotation.eulerAngles.y == 0 || rotation.eulerAngles.y == 180)
+                {
+                    holdLog += ($"\nHallway direction: {(dir.z > 0 ? "Forward" : "Backward")}");
+
+                    hallwayXTop = mid.x + hallwayXScale - 0.1f;
+                    hallwayXBottom = mid.x - hallwayXScale + 0.1f;
+
+
+                    hallwayZLeft = mid.z + hallwayZScale - 0.1f;
+                    hallwayZRight = mid.z - hallwayZScale + 0.1f;
+
+
+
+
+
+                }
+                else if (rotation.eulerAngles.y == 90 || rotation.eulerAngles.y == 270)
+                {
+                    holdLog += ($"\nHallway direction: {(dir.x > 0 ? "Right" : "Left")}");
+
+                    hallwayXTop = mid.x + hallwayZScale - 0.1f;
+                    hallwayXBottom = mid.x - hallwayZScale + 0.1f;
+
+
+                    hallwayZLeft = mid.z + hallwayXScale - 0.1f;
+                    hallwayZRight = mid.z - hallwayXScale + 0.1f;
+
+                }
+
+
+
+                bool xOverlap = false;
+                bool zOverlap = false;
+
+                holdLog += ($"\nHallway X Top: {hallwayXTop} Room X Bottom: {roomXBottom}");
+
+                holdLog += ($"\nHallway X Bottom: {hallwayXBottom} Room X Top: {roomXTop}");
+
+                holdLog += ($"\nHallway Z Left: {hallwayZLeft} Room Z Right: {roomZRight}");
+
+                holdLog += ($"\nHallway Z Right: {hallwayZRight} Room Z Left: {roomZLeft}");
+
+                if (mid.x > col.transform.position.x)
+                {
+                    holdLog += ($"\nHallway above room");
+
+                    if (hallwayXBottom < roomXTop)
+                    {
+                        holdLog += ($"\nBottom of hallway overlaps with top of room!");
+                        xOverlap = true;
+                    }
+                }
+                else
+                {
+                    holdLog += ($"\nHallway below room");
+
+                    if (hallwayXTop > roomXBottom)
+                    {
+                        holdLog += ($"\nTop of hallway overlaps with bottom of room!");
+                        xOverlap = true;
+                    }
+                }
+
+                if (mid.z > col.transform.position.z)
+                {
+                    holdLog += ($"\nHallway is Left of room");
+
+                    if (hallwayZRight < roomZLeft)
+                    {
+                        holdLog += ($"\nRight of hallway overlaps with left of room!");
+                        zOverlap = true;
+                    }
+
+                }
+                else
+                {
+                    holdLog += ($"\nHallway is Right of room");
+                    if (hallwayZLeft > roomZRight)
+                    {
+                        holdLog += ($"\nLeft of hallway overlaps with right of room!");
+                        zOverlap = true;
+                    }
+
+                }
+
+                if (xOverlap && zOverlap)
+                {
+                    Debug.LogWarning(holdLog);
+
+                    Debug.LogWarning($"Hallway overlaps with room on both X and Z axes!\nRan into {col.gameObject.name} located at {col.transform.position}");
+                    if (col.gameObject.name.Contains("Corner"))
+                    {
+                        cornerOverlap = true;
+                        cornerOverlapPosition = col.transform.position;
+                        CreateThreeJunction(col.gameObject);
+                    }
+                    else if (col.gameObject.name.Contains("Hallway"))
+                    {
+                        if (col.transform.position == mid && col.transform.localScale.z == length * 0.5f)
+                        {
+                            Debug.LogWarning("Two identical hallways overlapping.");
+                            dontCreate = true;
+                        }
+                        else
+                        {
+                            Debug.LogError("Hallway overlaps with another hallway. This should not happen. Check the map generation logic for errors.");
+
+                        }
+
+                    }
+                    else
+                    {
+                        Debug.LogError("Hallway overlaps with non-corner object. This should not happen. Check the map generation logic for errors.");
+                    }
+                    return true;
+                }
+
             }
         }
 
-        GameObject hallway = Instantiate(hallwayPrefab.creationPrefab, mid, Quaternion.LookRotation(dir),transform);
-        connecterObjectLists[hallwayPrefab].Add(hallway);
+        if (cornerOverlap)
+        {
+            Debug.Log($"Hallway overlaps with corner at {cornerOverlapPosition}. Adjusting hallway to create a junction.");
 
-        hallway.transform.localScale = new Vector3(hallway.transform.localScale.x, hallway.transform.localScale.y, length/hallwayBaseLength);
-        hallway.GetComponent<Hallway>().start = start;
-        hallway.GetComponent<Hallway>().end = end;
+            end = cornerOverlapPosition - (dir.normalized * (hallwayCornerPrefab.creationPrefab.transform.localScale.x / 2f));
+
+            dir = end - start;
+            length = dir.magnitude;
+
+            if (length < 0.1f)
+                return true;
+
+            mid = (start + end) * 0.5f;
+        }
+        if (!dontCreate)
+        {
+            GameObject hallway = Instantiate(hallwayPrefab.creationPrefab, mid, Quaternion.LookRotation(dir), transform);
+            connecterObjectLists[hallwayPrefab].Add(hallway);
+
+            hallway.transform.localScale = new Vector3(hallway.transform.localScale.x, hallway.transform.localScale.y, length / hallwayBaseLength);
+            hallway.GetComponent<Hallway>().start = start;
+            hallway.GetComponent<Hallway>().end = end;
+        }
+
+        return false;
+
     }
 
-    void CreateHallway(RoomNode a, RoomNode b)
+    private bool CreateHallway(RoomNode a, RoomNode b)
     {
-        if(a== null || b == null || (a.Position == b.Position))
+        bool failed = false;
+
+        if (a == null || b == null || (a.Position == b.Position))
         {
-            return;
+            return true;
         }
 
         Vector3 start = GetRoomEdgePoint(a.roomObject, b.Position);
@@ -686,13 +888,13 @@ public class MapGenerator : MonoBehaviour
 
 
         float cornerOffset = hallwayWidth;
-    
 
-        float roomOffset = hallwayWidth / 2f; 
+
+        float roomOffset = hallwayWidth / 2f;
 
         Vector3 dirToCorner = (corner - start).normalized;
         Vector3 dirFromCorner = (end - corner).normalized;
-        Vector3 dirFromStartRoom =(start - a.Position).normalized;
+        Vector3 dirFromStartRoom = (start - a.Position).normalized;
         Vector3 dirToEndRoom = (end - b.Position).normalized;
 
         string[] colours = new string[] { "Red", "Green", "Blue", "Yellow" };
@@ -730,16 +932,16 @@ public class MapGenerator : MonoBehaviour
         if (xDistance <= 5f || zDistance <= 5f)
         {
             //Debug.Log($"Creating large entry between {a.roomObject.name} and {b.roomObject.name} due to short distance (x: {xDistance}, z: {zDistance}) direction: {dirFromStartRoom}");
-            CreateLargeEntry(((start + end)/2f), dirFromStartRoom,xDistance,zDistance,start,end);
-                return;
+            CreateLargeEntry(((start + end) / 2f), dirFromStartRoom, xDistance, zDistance, start, end);
+            return false;
         }
 
-        if (dirToCorner ==  new Vector3(1, 0, 0) || dirToCorner == new Vector3(-1,0,0))
+        if (dirToCorner == new Vector3(1, 0, 0) || dirToCorner == new Vector3(-1, 0, 0))
         {
 
 
 
-            start += dirFromCorner*roomOffset;
+            start += dirFromCorner * roomOffset;
             corner = new Vector3(end.x, start.y, start.z);
 
             dirToCorner = (corner - start).normalized;
@@ -750,30 +952,38 @@ public class MapGenerator : MonoBehaviour
         Vector3 adjStart = start;
 
         if (dirFromStartRoom != dirToCorner)
-        { 
-            CreateCorner(start, a.roomObject.transform.position, corner,"ExitCorner");
+        {
+            failed = CreateCorner(start, a.roomObject.transform.position, corner, "ExitCorner");
+            if(failed)
+            {
+                return true;
+            }
             adjStart = start + (dirToCorner * roomOffset);
         }
         else
         {
 
-            adjStart = start - (dirFromCorner* roomOffset);
-            corner = corner - (dirToCorner * roomOffset); 
+            adjStart = start - (dirFromCorner * roomOffset);
+            corner = corner - (dirToCorner * roomOffset);
             corner = corner - (dirFromCorner * roomOffset);
         }
-      
-      
+
+
         Vector3 segment1End = corner - (dirToCorner * roomOffset);
-    
 
 
-        Vector3 segment2Start = corner + (dirFromCorner* roomOffset); 
+
+        Vector3 segment2Start = corner + (dirFromCorner * roomOffset);
         Vector3 adjEnd = end + (dirToEndRoom * roomOffset);
 
 
         //Corner corner
-        CreateCorner(corner, segment1End, segment2Start, "Corner");
+        failed = CreateCorner(corner, segment1End, segment2Start, "Corner");
 
+        if (failed)
+        {
+            return true; 
+        }
 
         //Debug.Log((dirToCorner * roomOffset) + "  |   " + (dirToCorner * cornerOffset) + "  |   " + (dirFromCorner * cornerOffset) + "  |   " + (dirToCorner * roomOffset));
         //Debug.Log($"Start: {start}, Segment1End: {segment1End}, Corner: {corner}, Segment2Start: {segment2Start}, End: {end}, AdjEnd: {adjEnd}");
@@ -783,21 +993,33 @@ public class MapGenerator : MonoBehaviour
         {
             //Debug.Log($"dirToEndRoom: {dirToEndRoom}  dirFromCorner: {dirFromCorner}");
             //Entry Corner
-            CreateCorner(adjEnd, segment2Start, end,"EntryCorner");
-                adjEnd = adjEnd - (dirFromCorner * roomOffset);
+            failed = CreateCorner(adjEnd, segment2Start, end, "EntryCorner");
+            if(failed)
+            {
+                return true;
+            }
+
+            adjEnd = adjEnd - (dirFromCorner * roomOffset);
         }
         else
         {
             adjEnd = end;
         }
 
+
         if (Vector3.Distance(adjStart, segment1End) > 0.1f)
-            CreateStraightHallway(adjStart, segment1End);
+            failed = CreateStraightHallway(adjStart, segment1End);
+
+        if (failed)
+        {
+            return true;
+        }
 
         //Segment 2
         if (Vector3.Distance(segment2Start, adjEnd) > 0.1f)
-            CreateStraightHallway(segment2Start, adjEnd);
-        
+            failed = CreateStraightHallway(segment2Start, adjEnd);
+
+        return failed;
     }
 
 
@@ -835,7 +1057,7 @@ public class MapGenerator : MonoBehaviour
         }
     }
 
-    void CreateCorner(Vector3 cornerPos, Vector3 from, Vector3 to,string newName)
+    private bool CreateCorner(Vector3 cornerPos, Vector3 from, Vector3 to, string newName)
     {
 
         Vector3 dir1 = (from - cornerPos).normalized;
@@ -848,11 +1070,11 @@ public class MapGenerator : MonoBehaviour
 
         float angle = 0;
 
-        if ((dir1 == new Vector3(1, 0, 0) || dir2 == new Vector3(1,0,0))&& (dir2 == new Vector3(0, 0, -1) || dir1 == new Vector3(0, 0, -1)))
+        if ((dir1 == new Vector3(1, 0, 0) || dir2 == new Vector3(1, 0, 0)) && (dir2 == new Vector3(0, 0, -1) || dir1 == new Vector3(0, 0, -1)))
         {
             angle = 90;
         }
-        else if((dir1 == new Vector3(1, 0, 0) || dir2 == new Vector3(1, 0, 0)) && (dir2 == new Vector3(0, 0, 1) || dir1 == new Vector3(0, 0, 1)))
+        else if ((dir1 == new Vector3(1, 0, 0) || dir2 == new Vector3(1, 0, 0)) && (dir2 == new Vector3(0, 0, 1) || dir1 == new Vector3(0, 0, 1)))
         {
             angle = 0;
         }
@@ -875,12 +1097,112 @@ public class MapGenerator : MonoBehaviour
         Vector3 checkHalfExtents = (hallwayCornerPrefab.creationPrefab.transform.localScale / 2) + (Vector3.one * minHallwayGap);
 
 
+        float hallwayXScale = hallwayCornerPrefab.creationPrefab.transform.localScale.x / 2;
+        float hallwayZScale = hallwayCornerPrefab.creationPrefab.transform.localScale.z / 2;
+
         Collider[] hits = Physics.OverlapBox(cornerPos, checkHalfExtents - (Vector3.one * 0.01f), Quaternion.identity);
 
-        var corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation,transform);
+
+        string holdLog = "";
+
+        foreach (Collider col in hits)
+        {
+            holdLog += ($"\nCorner overlap detected with {col.gameObject.name} at {col.transform.position} when trying to place corner at {cornerPos} with rotation {rotation.eulerAngles}");
+
+
+
+
+            float roomXScale = col.gameObject.transform.localScale.x / 2;
+            float roomZScale = col.gameObject.transform.localScale.z / 2;
+
+            float roomXTop = col.transform.position.x + roomXScale;
+            float roomXBottom = col.transform.position.x - roomXScale;
+
+            float roomZLeft = col.transform.position.z + roomZScale;
+            float roomZRight = col.transform.position.z - roomZScale;
+
+            float hallwayXTop = 0, hallwayXBottom = 0, hallwayZLeft = 0, hallwayZRight = 0;
+
+            hallwayXTop = cornerPos.x + hallwayXScale - 0.1f;
+            hallwayXBottom = cornerPos.x - hallwayXScale + 0.1f;
+
+
+            hallwayZLeft = cornerPos.z + hallwayZScale - 0.1f;
+            hallwayZRight = cornerPos.z - hallwayZScale + 0.1f;
+
+            bool xOverlap = false;
+            bool zOverlap = false;
+
+            if (cornerPos.x > col.transform.position.x)
+            {
+                holdLog += ($"\nHallway above room");
+
+                if (hallwayXBottom < roomXTop)
+                {
+                    holdLog += ($"\nBottom of hallway overlaps with top of room!");
+                    xOverlap = true;
+                }
+            }
+            else
+            {
+                holdLog += ($"\nHallway below room");
+
+                if (hallwayXTop > roomXBottom)
+                {
+                    holdLog += ($"\nTop of hallway overlaps with bottom of room!");
+                    xOverlap = true;
+                }
+            }
+
+            if (cornerPos.z > col.transform.position.z)
+            {
+                holdLog += ($"\nHallway is Left of room");
+
+                if (hallwayZRight < roomZLeft)
+                {
+                    holdLog += ($"\nRight of hallway overlaps with left of room!");
+                    zOverlap = true;
+                }
+
+            }
+            else
+            {
+                holdLog += ($"\nHallway is Right of room");
+                if (hallwayZLeft > roomZRight)
+                {
+                    holdLog += ($"\nLeft of hallway overlaps with right of room!");
+                    zOverlap = true;
+                }
+
+            }
+
+            if ((xOverlap && zOverlap))
+            {
+                Debug.LogWarning(holdLog);
+                Debug.LogWarning($"Corner overlaps with room on both X and Z axes!\nRan into {col.gameObject.name} located at {col.transform.position}");
+
+                if (col.transform.position == cornerPos)
+                {
+                    var threeJunction = Instantiate(hallwayThreeJunctionPrefab.creationPrefab, cornerPos, rotation, transform);
+                    Debug.LogWarning($"Exact overlap with corner detected. Placing three junction at {cornerPos} instead of regular corner.");
+                }
+                else
+                {
+                    Debug.LogError("Corner overlaps with non-corner object. This should not happen. Check the map generation logic for errors.");
+                }
+
+                return true;
+            }
+
+
+        }
+
+        var corner = Instantiate(hallwayCornerPrefab.creationPrefab, cornerPos, rotation, transform);
         connecterObjectLists[hallwayCornerPrefab].Add(corner);
         corner.name = newName;
 
+
+        return false;
     }
 
     void ChangeHallway(GameObject hallway, Vector3 newStart, Vector3 newEnd)
@@ -892,18 +1214,18 @@ public class MapGenerator : MonoBehaviour
         Vector3 mid = (newStart + newEnd) * 0.5f;
         hallway.transform.position = mid;
         hallway.transform.rotation = Quaternion.LookRotation(dir);
-        hallway.transform.localScale = new Vector3(hallway.transform.localScale.x, hallway.transform.localScale.y, length/hallwayBaseLength);
+        hallway.transform.localScale = new Vector3(hallway.transform.localScale.x, hallway.transform.localScale.y, length / hallwayBaseLength);
         hallway.GetComponent<Hallway>().start = newStart;
         hallway.GetComponent<Hallway>().end = newEnd;
     }
 
-    void CreateLargeEntry(Vector3 position, Vector3 direction,float XScale, float ZScale,Vector3 exitLocation,Vector3 entryLocation)
+    void CreateLargeEntry(Vector3 position, Vector3 direction, float XScale, float ZScale, Vector3 exitLocation, Vector3 entryLocation)
     {
         Quaternion rotation = Quaternion.LookRotation(direction);
-       
-        
 
-        if(direction == new Vector3(1, 0, 0) || direction == new Vector3(-1, 0, 0))
+
+
+        if (direction == new Vector3(1, 0, 0) || direction == new Vector3(-1, 0, 0))
         {
             ZScale += 5f;
             float temp = ZScale;
@@ -915,12 +1237,12 @@ public class MapGenerator : MonoBehaviour
             XScale += 5f;
         }
 
-        
-        
 
-        if(XScale >=5 && ZScale >=5)
+
+
+        if (XScale >= 5 && ZScale >= 5)
         {
-            var entry = Instantiate(hallwayLargeEntryPrefab.creationPrefab, position, rotation,transform);
+            var entry = Instantiate(hallwayLargeEntryPrefab.creationPrefab, position, rotation, transform);
             connecterObjectLists[hallwayLargeEntryPrefab].Add(entry);
             entry.name = "LargeEntry";
             entry.transform.localScale = new Vector3(XScale, hallwayHeight, ZScale);
@@ -933,6 +1255,14 @@ public class MapGenerator : MonoBehaviour
 
     }
 
+    private void CreateThreeJunction(GameObject cornerToReplace)
+    {
+        var junction = Instantiate(hallwayThreeJunctionPrefab.creationPrefab, cornerToReplace.transform.position, cornerToReplace.transform.rotation, transform);
+        junction.transform.localScale = cornerToReplace.transform.localScale;
+        Destroy(cornerToReplace);
+
+    }
+
     private void OpenDoors()
     {
 
@@ -940,7 +1270,7 @@ public class MapGenerator : MonoBehaviour
 
         foreach (var roomList in actualRoomObjectLists)
         {
-            foreach(GameObject room in roomList.Value)
+            foreach (GameObject room in roomList.Value)
             {
                 room.GetComponent<DoorHandler>().OpenDoors();
             }

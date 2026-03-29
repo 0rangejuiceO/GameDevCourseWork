@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4924169499426727770}
   - component: {fileID: 8977084580950449058}
   - component: {fileID: 7380294129355169407}
+  - component: {fileID: 6527572843345441526}
   m_Layer: 0
   m_Name: Torch
   m_TagString: Item
@@ -100,6 +101,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemName
   actualName: Torch
+--- !u!114 &6527572843345441526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2276640436376653334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d218feb476f330d4c92378f828c31e3c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Torch
+  torchLight: {fileID: 6377836090517900740}
 --- !u!1 &2356634146257796539
 GameObject:
   m_ObjectHideFlags: 0
@@ -318,7 +332,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5772876865792766500}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}

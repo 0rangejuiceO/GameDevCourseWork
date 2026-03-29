@@ -9,7 +9,21 @@ public class SceneHandler : MonoBehaviour
 
     async void Start()
     {
-        bool doReplacement = await MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration();
+
+
+        bool succeeded = false;
+        bool doReplacement = false;
+
+        while (!succeeded)
+        {
+            succeeded = await MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration();
+            if (succeeded)
+            {
+                doReplacement = MapSpawner.GetComponent<MapGenerator>().doReplacement;
+            }
+        }
+
+        Debug.Log(doReplacement);
 
         if (doReplacement)
         {

@@ -59,7 +59,7 @@ public class DoorHandler : MonoBehaviour
             newDoor.GetComponentInChildren<Door>().canOpen = true;
 
             door.SetActive(false);
-            Debug.Log("set canOpen to true");
+            //Debug.Log("set canOpen to true");
         }
         catch (Exception e)
         {
