@@ -14,6 +14,7 @@ public class InteractChecker : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField]private LayerMask interactableLayers;
 
+    private string interactMessage="";
     private void OnEnable()
     {
         interactAction.action.actionMap.Enable();
@@ -93,6 +94,13 @@ public class InteractChecker : MonoBehaviour
             else if( hitTag == "Generator")
             {
                 hit.collider.gameObject.GetComponent<Generator>().FlipState();
+            }
+            else
+            {
+                if(hit.collider.isTrigger)
+                {
+                    hit.collider.gameObject.GetComponent<Interactable>().Interact();
+                }
             }
         }
     }
@@ -175,27 +183,67 @@ public class InteractChecker : MonoBehaviour
         try
         {
             GameObject currentItem = inventoryHandler.GetCurrentItem();
-            string itemName = currentItem.GetComponent<ItemName>().actualName;
-
-            switch (itemName)
+            if(currentItem != null)
             {
-                case "Torch":
-                    currentItem.GetComponent<Torch>().ToggleTorch();
-                    break;
-                case "Pistol":
-                    currentItem.GetComponent<Pistol>().shoot();
-                    break;
-                default:
-                    Debug.Log("Current item cannot be used with press.");
-                    break;
+                string itemName = currentItem.GetComponent<ItemName>().actualName;
 
+                switch (itemName)
+                {
+                    case "Torch":
+                        currentItem.GetComponent<Torch>().ToggleTorch();
+                        break;
+                    case "Pistol":
+                        currentItem.GetComponent<Pistol>().shoot();
+                        break;
+                    default:
+                        Debug.Log("Current item cannot be used with press.");
+                        break;
+
+                }
             }
+
         }
         catch (Exception e)
         {
             Debug.LogError("Error in PressItem: " + e.Message);
             return;
         }
+    }
+
+
+    private void Update()
+    {
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, rayDistance, interactableLayers))
+        {
+            if (hit.collider.isTrigger)
+            {
+                //hit.collider.gameObject.GetComponent<Interactable>().Interact();
+                
+                if(interactMessage != hit.collider.gameObject.GetComponent<Interactable>().interactionPrompt)
+                {
+                    interactMessage = hit.collider.gameObject.GetComponent<Interactable>().interactionPrompt;
+                    Debug.Log(interactMessage);
+                }
+            }
+            else
+            {
+                if(interactMessage != "")
+                {
+                    interactMessage = "";
+                }
+            }
+        }
+        else
+        {
+            if(interactMessage != "")
+            {
+                interactMessage = "";
+            }
+        }
+
+
     }
 
 

@@ -10,6 +10,7 @@ public class SceneHandler : MonoBehaviour
     [SerializeField] GameObject MapSpawner;
     [SerializeField] Vector3 spawnPosition;
     [SerializeField] NavMeshSurface surface;
+    [SerializeField] FurnitureGenerator furnitureGenerator;
 
     public static event Action spawnEnemyEvent;
 
@@ -37,11 +38,13 @@ public class SceneHandler : MonoBehaviour
             }
         }
 
-        Debug.Log(doReplacement);
+        //Debug.Log(doReplacement);
 
         if (doReplacement)
         {
             Player.transform.position = spawnPosition;
+
+            furnitureGenerator.GenerateFurniture();
 
             yield return null;
 
