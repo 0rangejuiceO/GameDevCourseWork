@@ -54,7 +54,7 @@ public class DoorHandler : MonoBehaviour
             Vector3 position = door.transform.position;
             Quaternion rotation = door.transform.rotation;
 
-            var newDoor = Instantiate(doorPrefab, position, rotation);
+            var newDoor = Instantiate(doorPrefab, position, rotation,transform);
 
             newDoor.GetComponentInChildren<Door>().canOpen = true;
 

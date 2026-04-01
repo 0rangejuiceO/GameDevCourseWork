@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 667578291847285063}
   - component: {fileID: 4041723640709057785}
   - component: {fileID: 2928185715073740486}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Output
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 8266411620807096058}
   - component: {fileID: 8027813685935480436}
   - component: {fileID: 2166657213469503030}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: GameMachine
   m_TagString: GameMachine
   m_Icon: {fileID: 0}
@@ -170,7 +170,7 @@ GameObject:
   - component: {fileID: 3197060576105150256}
   - component: {fileID: 7067365782988267218}
   - component: {fileID: 7902320259631258202}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,7 +257,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7006610897289416969}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RewardPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

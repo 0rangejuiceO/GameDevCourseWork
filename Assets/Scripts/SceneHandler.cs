@@ -1,22 +1,36 @@
 using UnityEngine;
 using System.Threading.Tasks;
+using Unity.AI.Navigation;
+using System.Collections;
+using System;
 
 public class SceneHandler : MonoBehaviour
 {
     [SerializeField] GameObject Player;
     [SerializeField] GameObject MapSpawner;
     [SerializeField] Vector3 spawnPosition;
+    [SerializeField] NavMeshSurface surface;
 
-    async void Start()
+    public static event Action spawnEnemyEvent;
+
+    private void Start()
     {
 
+        StartCoroutine(DoMapGeneration());
+    }
 
+    IEnumerator DoMapGeneration()
+    {
         bool succeeded = false;
         bool doReplacement = false;
 
         while (!succeeded)
         {
-            succeeded = await MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration();
+            var task = MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration();
+
+            yield return new WaitUntil(() => task.IsCompleted);
+
+            succeeded = task.Result;
             if (succeeded)
             {
                 doReplacement = MapSpawner.GetComponent<MapGenerator>().doReplacement;
@@ -28,9 +42,16 @@ public class SceneHandler : MonoBehaviour
         if (doReplacement)
         {
             Player.transform.position = spawnPosition;
-        }
-        
 
+            yield return null;
+
+            surface.BuildNavMesh();
+
+            yield return null;
+
+            spawnEnemyEvent.Invoke();
+        }
     }
+
 
 }

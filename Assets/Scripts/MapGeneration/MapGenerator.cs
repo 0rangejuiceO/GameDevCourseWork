@@ -8,7 +8,7 @@ public class MapGenerator : MonoBehaviour
     [Header("Map Settings")]
     [Space(15)]
     [SerializeField] private RoomTypeIntDictionary roomPrefabs = new RoomTypeIntDictionary();
-    [Space(20)]
+    [Space(150)]
     [SerializeField] private float standardDeviation = 10f;
     [SerializeField] private int minHallwayGap = 5;
     [SerializeField] private Vector2 mapSize = new Vector2(100, 100);

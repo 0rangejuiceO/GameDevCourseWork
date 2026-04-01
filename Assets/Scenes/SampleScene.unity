@@ -1713,6 +1713,70 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 686618554}
   m_CullTransparentMesh: 1
+--- !u!1 &706223384
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 706223385}
+  - component: {fileID: 706223386}
+  m_Layer: 0
+  m_Name: NavMesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &706223385
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706223384}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 27.81117, y: -100.8, z: -44.5148}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1620725771}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &706223386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706223384}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshSurface
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 7808
+  m_UseGeometry: 1
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.16666667
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0
 --- !u!1 &778021496
 GameObject:
   m_ObjectHideFlags: 0
@@ -2729,22 +2793,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGenerator
   roomPrefabs:
-    _Buckets: ffffffffffffffffffffffff01000000ffffffffffffffff00000000
-    _HashCodes: 2e72fc7ff8ddfe7f0000000000000000000000000000000000000000
-    _Next: ffffffffffffffff0000000000000000000000000000000000000000
-    _Count: 2
-    _Version: 26
+    _Buckets: ffffffff00000000ffffffffffffffff0300000001000000ffffffff
+    _HashCodes: 22ac0000c4ab0000e0e8000076ab0000000000000000000000000000
+    _Next: ffffffffffffffffffffffff02000000000000000000000000000000
+    _Count: 4
+    _Version: 41
     _FreeList: -1
     _FreeCount: 0
     _Keys:
-    - {fileID: 11400000, guid: f45c3db46ec4a794b9a4b7e3f660986a, type: 2}
+    - {fileID: 11400000, guid: caf69725be14fe746ab237fb0d8a222d, type: 2}
     - {fileID: 11400000, guid: 09e116a2ed34c8447841c5c849d0785c, type: 2}
+    - {fileID: 11400000, guid: 910fbed0a340b564f9ca108c971ea5a9, type: 2}
+    - {fileID: 11400000, guid: f45c3db46ec4a794b9a4b7e3f660986a, type: 2}
     - {fileID: 0}
     - {fileID: 0}
     - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    _Values: 08000000080000000000000000000000000000000000000000000000
+    _Values: 0400000008000000010000000f000000000000000000000000000000
   standardDeviation: 50
   minHallwayGap: 9
   mapSize: {x: 500, y: 500}
@@ -3275,6 +3339,7 @@ MonoBehaviour:
   Player: {fileID: 136058925}
   MapSpawner: {fileID: 1437203582}
   spawnPosition: {x: 0, y: 0, z: 0}
+  surface: {fileID: 706223386}
 --- !u!4 &1620725771
 Transform:
   m_ObjectHideFlags: 0
@@ -3287,7 +3352,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 100.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 706223385}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1666092578
@@ -4973,7 +5039,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7787427698462517471, guid: 9ac2257120c593c4d9da39fcff24f645, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 100
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7787427698462517471, guid: 9ac2257120c593c4d9da39fcff24f645, type: 3}
       propertyPath: m_LocalPosition.z

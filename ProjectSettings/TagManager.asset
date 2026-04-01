@@ -9,6 +9,7 @@ TagManager:
   - Floor
   - GameMachine
   - Generator
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -19,11 +20,11 @@ TagManager:
   - Door
   - DoorFrame
   - Self
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Floor
+  - Wall
+  - Stairs
+  - KinematicFurniture
+  - NonKinematicFurniture
   - 
   - 
   - 
