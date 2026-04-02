@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FPController;
+using System;
 
 public class InventoryHandler : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class InventoryHandler : MonoBehaviour
     [SerializeField] private Vector3 cameraOffset;
     [SerializeField]private FPController.FPController playerController;
 
+    public static event Action DropItemEvent;
+    public static event Action DestroyItemEvent;
 
     private void OnEnable()
     {
@@ -29,6 +32,9 @@ public class InventoryHandler : MonoBehaviour
         dropItemAction.action.actionMap.Enable();
         dropItemAction.action.performed += OnDropItem;
         dropItemAction.action.Enable();
+        InventoryHandler.DropItemEvent += DropItem;
+        InventoryHandler.DestroyItemEvent += DestroyItem;
+
     }
 
     private void OnDisable()
@@ -38,6 +44,8 @@ public class InventoryHandler : MonoBehaviour
         itemSlotAction.action.Disable();
         dropItemAction.action.performed -= OnDropItem;
         dropItemAction.action.Disable();
+        InventoryHandler.DropItemEvent -= DropItem;
+        InventoryHandler.DestroyItemEvent -= DestroyItem;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -56,25 +64,38 @@ public class InventoryHandler : MonoBehaviour
 
     public void AddItemToInventory(GameObject newItem)
     {
-        var realNewItem = Instantiate(newItem, new Vector3(0,100,0), Quaternion.identity);
-        realNewItem.SetActive(false);
-        Rigidbody rb = realNewItem.GetComponent<Rigidbody>();
+        newItem.transform.parent = camera;
+        newItem.transform.localPosition = cameraOffset;
+        newItem.transform.localRotation = Quaternion.identity;
+
+        Rigidbody rb = newItem.GetComponent<Rigidbody>();
         rb.isKinematic = true;
         rb.useGravity = false;
-        realNewItem.transform.parent = camera;
-        realNewItem.transform.localPosition = cameraOffset;
-        realNewItem.transform.localRotation = Quaternion.identity;
+
 
 
         if (currentInventory[currentSlot] != null)
         {
             DropItem(currentInventory[currentSlot]);
         }
-        currentInventory[currentSlot] = realNewItem;
-        UpdateInventorySlot(realNewItem);
+        currentInventory[currentSlot] = newItem;
+        UpdateInventorySlot(newItem);
+    }
+
+    public static void onDropItem()
+    { 
+        Debug.Log("DropItemEvent Invoked");
+        DropItemEvent?.Invoke();
     }
 
     private void OnDropItem(InputAction.CallbackContext context)
+    {
+        DropItem(currentInventory[currentSlot]);
+        inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName("");
+        currentInventory[currentSlot] = null;
+    }
+
+    public void DropItem()
     {
         DropItem(currentInventory[currentSlot]);
         inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName("");
@@ -85,13 +106,13 @@ public class InventoryHandler : MonoBehaviour
     {
         Vector3 spawnLocation = camera.position + (camera.forward * spawnOffset);
         Quaternion rotation = Quaternion.LookRotation(camera.forward);
-        var newItem = Instantiate(itemToDrop, spawnLocation, rotation);
-        newItem.SetActive(true);
-        newItem.name=itemToDrop.name;
-        Rigidbody rb = newItem.GetComponent<Rigidbody>();
+        itemToDrop.transform.parent = null;
+        itemToDrop.transform.rotation = rotation;
+        itemToDrop.transform.position = spawnLocation;
+        Rigidbody rb = itemToDrop.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.useGravity = true;
-        Destroy(itemToDrop);
+
     }
 
     public void DropItem(GameObject itemToDrop, bool destoryItem)
@@ -107,6 +128,20 @@ public class InventoryHandler : MonoBehaviour
         {
             DropItem(itemToDrop);
         }
+    }
+
+    public static void onDestroyItem()
+    {
+        Debug.Log("DestroyItemEvent Invoked");
+        DestroyItemEvent?.Invoke();
+    }
+
+    private void DestroyItem()
+    {
+        GameObject itemToDestroy = currentInventory[currentSlot];
+        inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName("");
+        currentInventory[currentSlot] = null;
+        Destroy(itemToDestroy);
     }
 
     public GameObject GetCurrentItem()

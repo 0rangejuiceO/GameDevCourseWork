@@ -27,9 +27,19 @@ public class FurnitureGenerator : MonoBehaviour
 
                 Debug.Log($"Rotation {spawnPoint.gameObject.transform.rotation}");
 
+                Vector3 offset = new Vector3(0,0,0);
+
+                offset.y = -availableSpace.y/2f;
+                offset.z = -availableSpace.z / 2f;
+                if (spawnPoint.gameObject.transform.rotation.eulerAngles.y == 180)
+                {
+                    offset.z = -offset.z;
+                }
+                Debug.Log($"Offset {offset}");
+
                 if (neededSpace.x <= availableSpace.x && neededSpace.y <= availableSpace.y && neededSpace.z <= availableSpace.z )
                 {
-                    var furniture = Instantiate(prefab, spawnPoint.transform.position + spawnPoint.cubeOffset, spawnPoint.gameObject.transform.rotation);
+                    var furniture = Instantiate(prefab, spawnPoint.transform.position + spawnPoint.cubeOffset+ offset, spawnPoint.gameObject.transform.rotation);
                 }
 
             }

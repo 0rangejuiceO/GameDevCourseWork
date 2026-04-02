@@ -69,18 +69,8 @@ public class InteractChecker : MonoBehaviour
             string hitName = hit.collider.gameObject.name;
             Debug.Log($"Hit object tag: {hitTag}\nHit object name: {hitName}");
 
-            if(hitTag == "Door")
-            {
-                try
-                {
-                    hit.collider.gameObject.GetComponent<Door>().addForce(ray.direction,openDoorForce);
-                }
-                catch(Exception e)
-                {
-                    return;
-                }
-            }
-            else if(hitTag == "Item")
+
+            if(hitTag == "Item")
             {
                 inventoryHandler.AddItemToInventory(hit.collider.gameObject);
                 hit.collider.gameObject.SetActive(false);
@@ -99,7 +89,12 @@ public class InteractChecker : MonoBehaviour
             {
                 if(hit.collider.isTrigger)
                 {
-                    hit.collider.gameObject.GetComponent<Interactable>().Interact();
+                    Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
+                    if(interactable != null)
+                    {
+                        hit.collider.gameObject.GetComponent<Interactable>().Interact();
+                    }
+                    
                 }
             }
         }
@@ -121,7 +116,7 @@ public class InteractChecker : MonoBehaviour
                 if (currentItem != null)
                 {
                     Debug.Log($"{currentItem.name}");
-                    if (hitTag == "Door")
+                    if (hitTag == "NO")
                     {
 
                         if (currentItem.name.Contains("Key"))
@@ -159,6 +154,16 @@ public class InteractChecker : MonoBehaviour
                         {
                             currentItem.GetComponent<Medkit>().HealSelf();
                             inventoryHandler.DropItem(currentItem, false);
+                        }
+                    }
+
+                    if(hit.collider.isTrigger)
+                    {
+                        HoldInteractable holdInteractable = hit.collider.gameObject.GetComponent<HoldInteractable>();
+
+                        if (holdInteractable != null)
+                        {
+                            holdInteractable.GetComponent<HoldInteractable>().Interact(currentItem.name);
                         }
                     }
 
@@ -221,11 +226,18 @@ public class InteractChecker : MonoBehaviour
             {
                 //hit.collider.gameObject.GetComponent<Interactable>().Interact();
                 
-                if(interactMessage != hit.collider.gameObject.GetComponent<Interactable>().interactionPrompt)
+                Interactable interactable = hit.collider.gameObject.GetComponent<Interactable>();
+
+                if (interactable != null)
                 {
-                    interactMessage = hit.collider.gameObject.GetComponent<Interactable>().interactionPrompt;
-                    Debug.Log(interactMessage);
+                    if (interactMessage != hit.collider.gameObject.GetComponent<Interactable>().interactionPrompt)
+                    {
+                        interactMessage = hit.collider.gameObject.GetComponent<Interactable>().interactionPrompt;
+                        Debug.Log(interactMessage);
+                    }
                 }
+
+
             }
             else
             {

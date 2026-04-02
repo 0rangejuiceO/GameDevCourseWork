@@ -53,6 +53,7 @@ public class SceneHandler : MonoBehaviour
             yield return null;
 
             spawnEnemyEvent.Invoke();
+
         }
     }
 

@@ -63,7 +63,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: -0.15, z: 1}
-  m_Center: {x: 0, y: 0.15, z: 0.1}
+  m_Center: {x: 0, y: 0.55, z: 0.6}
 --- !u!136 &1529645690647051122
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -86,7 +86,7 @@ CapsuleCollider:
   m_Radius: 0.4
   m_Height: 0
   m_Direction: 1
-  m_Center: {x: 0, y: -0.2, z: 0.1}
+  m_Center: {x: 0, y: 0.2, z: 0.6}
 --- !u!65 &136558020949606241
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107,7 +107,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1.3, z: 0.15}
-  m_Center: {x: 0, y: 0.85, z: -0.35}
+  m_Center: {x: 0, y: 1.35, z: 0.15}
 --- !u!65 &4514633910864403030
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -128,7 +128,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.15, y: 0.6, z: 1}
-  m_Center: {x: 0.59, y: 0.5, z: 0.05}
+  m_Center: {x: 0.59, y: 1, z: 0.55}
 --- !u!65 &9005789010390782186
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -149,7 +149,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 0.15, y: 0.6, z: 1}
-  m_Center: {x: -0.59, y: 0.5, z: 0.05}
+  m_Center: {x: -0.59, y: 1, z: 0.55}
 --- !u!54 &7010271118674385381
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureSize
   cubeSize: {x: 1.4, y: 2.2, z: 1.3}
-  cubeOffset: {x: 0, y: 0.5, z: 0.12}
+  cubeOffset: {x: 0, y: 0.9, z: 0.62}
   gizmoColour: {r: 0, g: 1, b: 1, a: 1}
   forwardLineLength: 2
   lineColour: {r: 1, g: 0, b: 0, a: 1}
@@ -226,7 +226,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1.3, z: 0.15}
-  m_Center: {x: 0, y: 0.85, z: -0.45}
+  m_Center: {x: 0, y: 1.35, z: 0.05}
 --- !u!114 &7458588481182457938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,11 +302,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 442048, guid: 36a7c36a016378e4a8f00004c68a1f3d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.05
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 442048, guid: 36a7c36a016378e4a8f00004c68a1f3d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.14
+      value: 0.64
       objectReference: {fileID: 0}
     - target: {fileID: 442048, guid: 36a7c36a016378e4a8f00004c68a1f3d, type: 3}
       propertyPath: m_LocalRotation.w
