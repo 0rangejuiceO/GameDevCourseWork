@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PhysicsShadow : MonoBehaviour
 {
-    private Transform realTransform;
+    [SerializeField] private Transform realTransform;
+
 
     public void SetTransform(Transform transform)
     {

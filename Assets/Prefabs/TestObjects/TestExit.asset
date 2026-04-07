@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8ca2c459b36aa874794d9511f2c31331, type: 3}
-  m_Name: Exit
+  m_Name: TestExit
   m_EditorClassIdentifier: Assembly-CSharp::RoomType
   displayName: Exit
   roomPrefab: {fileID: 5880260964656301182, guid: 1a7d192f9125b884db3b72adaa1249b5, type: 3}
