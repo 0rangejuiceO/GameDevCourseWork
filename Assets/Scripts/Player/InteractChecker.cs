@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+using Unity.Netcode;
 
-public class InteractChecker : MonoBehaviour
+public class InteractChecker : NetworkBehaviour
 {
     [SerializeField]private float rayDistance = 100f;
     [SerializeField]private InputActionReference interactAction;
@@ -15,6 +16,11 @@ public class InteractChecker : MonoBehaviour
     [SerializeField]private LayerMask interactableLayers;
 
     private string interactMessage="";
+
+    private void Awake()
+    {
+        miniGameHandler = GameObject.Find("MiniGameHandler");
+    }
     private void OnEnable()
     {
         interactAction.action.actionMap.Enable();
@@ -218,6 +224,9 @@ public class InteractChecker : MonoBehaviour
 
     private void Update()
     {
+
+        if(!IsOwner) return;
+
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, rayDistance, interactableLayers))

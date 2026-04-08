@@ -56,15 +56,22 @@ public class MapGenerator : MonoBehaviour
     private GameObject spawnRoom;
     private Dictionary<ConnecterType, List<GameObject>> connecterObjectLists = new Dictionary<ConnecterType, List<GameObject>>();
     private Dictionary<int, List<RoomNode>> floorRooms = new Dictionary<int, List<RoomNode>>();
+    private System.Random rng;
 
-    public async Task<bool> BeginMapGeneration()
+    public async Task<bool> BeginMapGeneration(int seed)
     {
+        rng = new System.Random(seed);
 
+        Debug.Log("Random state synchronized with seed: " + seed);
 
-        foreach (Transform child in transform)
+        foreach (Transform child in transform.Cast<Transform>().ToList())
         {
-            Destroy(child.gameObject);
+            // DestroyImmediate forces the physics world to update right now
+            DestroyImmediate(child.gameObject);
         }
+        // Remove the await Task.Yield() here if you want it to be perfectly safe, 
+        // or ensure Physics.SyncTransforms() is called right after.
+        Physics.SyncTransforms();
 
         await Task.Yield();
 
@@ -98,9 +105,9 @@ public class MapGenerator : MonoBehaviour
 
         numFloors = SetNumOfFloors();
 
-        spawnFloor = Random.Range(1, numFloors + 1);
+        spawnFloor = rng.Next(1, numFloors + 1);
 
-        floorHeightZero = Random.Range(1, numFloors + 1);
+        floorHeightZero = rng.Next(1, numFloors + 1);
 
         floorYPositions = new Dictionary<int, int>();
 
@@ -394,9 +401,10 @@ public class MapGenerator : MonoBehaviour
 
     private void MakeStairHallway()
     {
-        // 1. Group all stair segments by their XZ position to identify unique shafts
+
         var stairShafts = stairsList
             .GroupBy(s => new Vector2(s.transform.position.x, s.transform.position.z))
+            .OrderBy(g => g.Key.x).ThenBy(g => g.Key.y) 
             .ToList();
 
         foreach (var shaft in stairShafts)
@@ -460,7 +468,7 @@ public class MapGenerator : MonoBehaviour
 
         for (int i = 0; i < remainingRooms; i++)
         {
-            int randomFloor = Random.Range(0, numFloors);
+            int randomFloor = rng.Next(0, numFloors);
 
             floorBuckets[randomFloor]++;
         }
@@ -565,12 +573,11 @@ public class MapGenerator : MonoBehaviour
 
     void Shuffle<T>(List<T> list)
     {
-        System.Random rng = new System.Random();
         int n = list.Count;
         while (n > 1)
         {
             n--;
-            int k = rng.Next(n + 1);
+            int k = rng.Next(0, n + 1);
             T value = list[k];
             list[k] = list[n];
             list[n] = value;
@@ -579,8 +586,8 @@ public class MapGenerator : MonoBehaviour
 
     float NextGaussian(float mean, float stdDev)
     {
-        float v1 = Random.value;
-        float v2 = Random.value;
+        float v1 = (float)rng.NextDouble();
+        float v2 = (float)rng.NextDouble();
         float stdNormal = Mathf.Sqrt(-2.0f * Mathf.Log(v1)) * Mathf.Sin(2.0f * Mathf.PI * v2);
         return mean + stdDev * stdNormal;
     }
@@ -600,7 +607,7 @@ public class MapGenerator : MonoBehaviour
         }
 
 
-        float rand = Random.Range(0f, totalWeight);
+        float rand = (float)(rng.NextDouble() * totalWeight);
         float cumulative = 0f;
 
         foreach (var entry in floorNumProbability)

@@ -49,8 +49,10 @@ public class InventoryHandler : MonoBehaviour
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
+        inventoryUIStart = GameObject.Find("InventorySlotStartPoint").GetComponent<Transform>();
+
         currentInventory = new GameObject[inventorySize];
         for (int i = 0; i < inventorySize; i++)
         {

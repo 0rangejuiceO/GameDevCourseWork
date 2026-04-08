@@ -1,7 +1,8 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class RandomNavMeshWander : MonoBehaviour
+public class RandomNavMeshWander : NetworkBehaviour
 {
     public float wanderRadius = 10f;
     public float waitTime = 2f;
@@ -17,6 +18,11 @@ public class RandomNavMeshWander : MonoBehaviour
 
     void Update()
     {
+/*        if (!IsOwner)
+        {
+            return;
+        }
+        Debug.Log("Wandering...");*/
         timer += Time.deltaTime;
 
         if (timer >= waitTime && !agent.pathPending && agent.remainingDistance < 0.5f)

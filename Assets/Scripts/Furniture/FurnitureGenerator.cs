@@ -14,18 +14,18 @@ public class FurnitureGenerator : MonoBehaviour
         {
             if(Random.Range(0,2) == 1)
             {
-                Debug.Log("Trying to spawn furniture at " + spawnPoint.name);
+                //Debug.Log("Trying to spawn furniture at " + spawnPoint.name);
                 Vector3 availableSpace = spawnPoint.cubeSize;
 
                 int index = Random.Range(0, prefabs.Length);
                 GameObject prefab = prefabs[index];
-                Debug.Log($"Prefab {prefab.name}");
+                //Debug.Log($"Prefab {prefab.name}");
 
                 Vector3 neededSpace = prefab.GetComponent<FurnitureSize>().cubeSize;
 
-                Debug.Log($"Available space {availableSpace} , Needed space {neededSpace}");
+                //Debug.Log($"Available space {availableSpace} , Needed space {neededSpace}");
 
-                Debug.Log($"Rotation {spawnPoint.gameObject.transform.rotation}");
+                //Debug.Log($"Rotation {spawnPoint.gameObject.transform.rotation}");
 
                 Vector3 offset = new Vector3(0,0,0);
 
@@ -35,7 +35,7 @@ public class FurnitureGenerator : MonoBehaviour
                 {
                     offset.z = -offset.z;
                 }
-                Debug.Log($"Offset {offset}");
+                //Debug.Log($"Offset {offset}");
 
                 if (neededSpace.x <= availableSpace.x && neededSpace.y <= availableSpace.y && neededSpace.z <= availableSpace.z )
                 {

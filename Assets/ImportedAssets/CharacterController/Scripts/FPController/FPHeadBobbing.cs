@@ -1,22 +1,29 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace FPController
 {
-    public class FPHeadBobbing : MonoBehaviour
+    public class FPHeadBobbing : NetworkBehaviour
     {
         [SerializeField, Range(0, 20f)] float _frequency = 15f;
         [SerializeField, Range(0, 0.1f)] float _amplitude = 0.04f;
         [SerializeField, Range(1, 2f)] float _sprintMultiplier = 1.3f;
 
         private FPController _player;
-        private Transform _cameraHolderTransform;
+        [SerializeField]private Transform _cameraHolderTransform;
         private float _defaultPosY = 0;
         private float _timer = 0;
 
-        private void Awake()
+        public override void OnNetworkSpawn()
         {
-            _player = GetComponent<FPController>();
-            _cameraHolderTransform = GetComponentInChildren<Camera>().transform.parent;
+            if (!IsOwner)
+            {
+                enabled = false;
+            }
+            else
+            {
+                _player = GetComponent<FPController>();
+            }
         }
 
         // On Start caches the camera position on the Y-Axis

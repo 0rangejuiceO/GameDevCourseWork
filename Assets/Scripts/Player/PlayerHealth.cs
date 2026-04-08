@@ -7,8 +7,10 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField]private int maxHealth = 100;
     private int health;
 
-    private void Start()
+    private void Awake()
     {
+        healthBar = GameObject.Find("HealthBar").GetComponent<Slider>();
+
         health = maxHealth;
         healthBar.maxValue = maxHealth;
         healthBar.value = health;

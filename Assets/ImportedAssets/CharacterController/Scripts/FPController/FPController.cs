@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace FPController
 {
     [RequireComponent(typeof(FPInputManager))]
-    public class FPController : MonoBehaviour
+    public class FPController : NetworkBehaviour
     {
         #region Inspector Serialized Fields
         [Header("Movement")] // Movement Fields
@@ -114,7 +115,10 @@ namespace FPController
 
         private void Update()
         {
-            
+            if (!IsOwner)
+            {
+                return;
+            }
             SlopeCheck();           // Slope Check and logic
             UpdateGround();         // Ground Check and logic
             UpdateGravity();        // Gravity calculations
@@ -124,6 +128,10 @@ namespace FPController
 
         private void LateUpdate()
         {
+            if(!IsOwner)
+            {
+                return;
+            }
             if (LockMovement) { return; }
             UpdateCamera();
         }
