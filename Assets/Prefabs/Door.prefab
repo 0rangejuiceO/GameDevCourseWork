@@ -279,14 +279,14 @@ GameObject:
   - component: {fileID: 3946276999062997599}
   - component: {fileID: 5563653329679093954}
   - component: {fileID: 8785378349275734367}
+  - component: {fileID: 7414112617733346041}
   - component: {fileID: 3512418483987148757}
   - component: {fileID: 7063010820583355614}
   - component: {fileID: 1559185517193507032}
   - component: {fileID: 5582693525482926471}
   - component: {fileID: 512283605518281916}
-  - component: {fileID: 7414112617733346041}
-  - component: {fileID: 3446762895232148054}
-  - component: {fileID: 6623202433625562422}
+  - component: {fileID: 8534345252141911042}
+  - component: {fileID: 5253475139663000356}
   m_Layer: 6
   m_Name: Door
   m_TagString: Door
@@ -453,6 +453,31 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
+--- !u!114 &7414112617733346041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6295678598195761187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 2495261907
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!114 &3512418483987148757
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,6 +490,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc4ee271ac4441d48bad2b19c3e00335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Door
+  ShowTopMostFoldoutHeaderGroup: 1
   canOpen: 0
   isLocked: 0
   rb: {fileID: 0}
@@ -552,7 +578,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3512418483987148757}
         m_TargetAssemblyTypeName: Door, Assembly-CSharp
-        m_MethodName: addForce
+        m_MethodName: addForceRPC
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -563,32 +589,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   interactionPrompt: Press E to interact
---- !u!114 &7414112617733346041
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6295678598195761187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 0
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &3446762895232148054
+--- !u!114 &8534345252141911042
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -616,7 +617,7 @@ MonoBehaviour:
   TickSyncChildren: 0
   UseUnreliableDeltas: 0
   SyncPositionX: 1
-  SyncPositionY: 0
+  SyncPositionY: 1
   SyncPositionZ: 1
   SyncRotAngleX: 0
   SyncRotAngleY: 1
@@ -630,11 +631,11 @@ MonoBehaviour:
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
-  InLocalSpace: 0
+  InLocalSpace: 1
   SwitchTransformSpaceWhenParented: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &6623202433625562422
+--- !u!114 &5253475139663000356
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -649,7 +650,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkRigidbodyBaseExpanded: 0
   UseRigidBodyForMotion: 1
-  AutoUpdateKinematicState: 1
+  AutoUpdateKinematicState: 0
   AutoSetKinematicOnDespawn: 1
 --- !u!1 &7582112008302454573
 GameObject:

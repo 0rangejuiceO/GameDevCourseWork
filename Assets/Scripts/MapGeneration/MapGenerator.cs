@@ -1,21 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using System.Threading.Tasks;
+using Unity.Netcode;
+using Unity.Networking.Transport.Error;
+using UnityEngine;
+using UnityEngine.UIElements;
 
-public class MapGenerator : MonoBehaviour
+public class MapGenerator : NetworkBehaviour
 {
-    [Header("Map Settings")]
-    [Space(15)]
-    [SerializeField] private RoomTypeIntDictionary roomPrefabs = new RoomTypeIntDictionary();
-    [Space(150)]
-    [SerializeField] private float standardDeviation = 10f;
-    [SerializeField] private int minHallwayGap = 5;
-    [SerializeField] private Vector2 mapSize = new Vector2(100, 100);
-    [SerializeField] private int maxPlacementAttempts = 1000;
-    [SerializeField] private RoomType spawnRoomPrefab;
-    [Space(20)]
-    [SerializeField]
+      private RoomTypeIntDictionary roomPrefabs = new RoomTypeIntDictionary();
+      private float standardDeviation = 10f;
+      private int minHallwayGap = 5;
+      private Vector2 mapSize = new Vector2(100, 100);
+      private int maxPlacementAttempts = 1000;
+      private RoomType spawnRoomPrefab;
     private IntFloatDictionary floorNumProbability = new IntFloatDictionary()
     {
         {1, 0.07f},
@@ -24,22 +23,23 @@ public class MapGenerator : MonoBehaviour
         {4, 0.12f},
         {5,0.03f }
     };
-    [Space(20)]
-    [SerializeField] private int roomHeight = 5;
-    [SerializeField] private int minRoomsPerFloor = 4;
-    [SerializeField] private ConnecterType hallwayPrefab;
-    [SerializeField] private ConnecterType hallwayCornerPrefab;
-    [SerializeField] private ConnecterType hallwayLargeEntryPrefab;
-    [SerializeField] private ConnecterType hallwayThreeJunctionPrefab;
-    [SerializeField] private ConnecterType hallwayFourJunctionPrefab;
-    [SerializeField] private float hallwayWidth = 5f;
-    [SerializeField] private float hallwayHeight = 5f;
-    [SerializeField] private float hallwayBaseLength = 5f;
-    [SerializeField] private RoomType stairSegment;
-    [SerializeField] private int stairSegmentHeight;
-    [SerializeField] private int numStairs;
-    [SerializeField] private int minStairsDistance;
-    [SerializeField] private int maxStairHallwayDistance;
+      private int roomHeight = 5;
+      private int minRoomsPerFloor = 4;
+      private ConnecterType hallwayPrefab;
+      private ConnecterType hallwayCornerPrefab;
+      private ConnecterType hallwayLargeEntryPrefab;
+      private ConnecterType hallwayThreeJunctionPrefab;
+      private ConnecterType hallwayFourJunctionPrefab;
+      private float hallwayWidth = 5f;
+      private float hallwayHeight = 5f;
+      private float hallwayBaseLength = 5f;
+      private RoomType stairSegment;
+      private int stairSegmentHeight;
+      private int numStairs;
+      private int minStairsDistance;
+      private int maxStairHallwayDistance;
+      private GameObject doorframePrefab;
+      private GameObject doorPrefab;
     public bool doReplacement = false;
 
 
@@ -57,9 +57,12 @@ public class MapGenerator : MonoBehaviour
     private Dictionary<ConnecterType, List<GameObject>> connecterObjectLists = new Dictionary<ConnecterType, List<GameObject>>();
     private Dictionary<int, List<RoomNode>> floorRooms = new Dictionary<int, List<RoomNode>>();
     private System.Random rng;
+    private Dictionary<int,GameObject> doors = new Dictionary<int,GameObject>();
 
     public async Task<bool> BeginMapGeneration(int seed)
     {
+        GetVariables();
+
         rng = new System.Random(seed);
 
         Debug.Log("Random state synchronized with seed: " + seed);
@@ -157,13 +160,58 @@ public class MapGenerator : MonoBehaviour
         {
             Debug.Log("Replacing Generations Rooms with Actual Rooms");
             DoReplacement();
-            OpenDoors();
         }
 
         await Task.Yield();
         Debug.Log("Map Generation Complete");
 
         return true;
+    }
+
+    private void GetVariables()
+    {
+        var roomDataset = GetComponentInParent<RoomTypeDataset>();
+        var mapSettings = GetComponentInParent<MapSpawnerSettingsDataset>();
+        var connecterDataset = GetComponentInParent<ConnecterTypeDataset>();
+
+        if (roomDataset == null || mapSettings == null || connecterDataset == null)
+        {
+            Debug.LogError("Missing dataset components in parent hierarchy!");
+            return;
+        }
+
+        // Room data
+        roomPrefabs = roomDataset.GetRoomPrefabs();
+        spawnRoomPrefab = roomDataset.GetSpawnRoom();
+
+        // Map settings
+        standardDeviation = mapSettings.GetStandardDeviation();
+        minHallwayGap = mapSettings.GetMinHallwayGap();
+        mapSize = mapSettings.GetMapSize();
+        maxPlacementAttempts = mapSettings.GetMaxPlacementAttempts();
+        floorNumProbability = mapSettings.GetFloorNumProbability();
+        roomHeight = mapSettings.GetRoomHeight();
+        minRoomsPerFloor = mapSettings.GetMinRoomsPerFloor();
+
+        // Connecter / hallway / stairs / doors
+        hallwayPrefab = connecterDataset.GetHallwayPrefab();
+        hallwayCornerPrefab = connecterDataset.GetHallwayCornerPrefab();
+        hallwayLargeEntryPrefab = connecterDataset.GetLargeEntryPrefab();
+        hallwayThreeJunctionPrefab = connecterDataset.GetThreeJunctionPrefab();
+        hallwayFourJunctionPrefab = connecterDataset.GetFourJunctionPrefab();
+
+        hallwayWidth = connecterDataset.GetHallwayWidth();
+        hallwayHeight = connecterDataset.GetHallwayHeight();
+        hallwayBaseLength = connecterDataset.GetHallwayBaseLength();
+
+        stairSegment = connecterDataset.GetStairSegment();
+        stairSegmentHeight = connecterDataset.GetStairSegmentHeight();
+        numStairs = connecterDataset.GetNumStairs();
+        minStairsDistance = connecterDataset.GetMinStairsDistance();
+        maxStairHallwayDistance = connecterDataset.GetMaxStairHallwayDistance();
+
+        doorframePrefab = connecterDataset.GetDoorframePrefab();
+        doorPrefab = connecterDataset.GetDoorBodyPrefab();
     }
 
     private void DoReplacement()
@@ -592,11 +640,7 @@ public class MapGenerator : MonoBehaviour
         return mean + stdDev * stdNormal;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireCube(Vector3.zero, new Vector3(mapSize.x, 0.1f, mapSize.y));
-    }
+
 
     private int SetNumOfFloors()
     {
@@ -1272,16 +1316,82 @@ public class MapGenerator : MonoBehaviour
 
     private void OpenDoors()
     {
+        GameObject[] doorsToReplace;
+        doorsToReplace = spawnRoom.GetComponent<DoorHandler>().GetDoorsToReplace();
 
-        spawnRoom.GetComponent<DoorHandler>().OpenDoors();
+        foreach (GameObject door in doorsToReplace)
+        {
+            SpawnDoor(door);
+        }
 
         foreach (var roomList in actualRoomObjectLists)
         {
             foreach (GameObject room in roomList.Value)
             {
-                room.GetComponent<DoorHandler>().OpenDoors();
+                doorsToReplace = room.GetComponent<DoorHandler>().GetDoorsToReplace();
+
+                foreach (GameObject door in doorsToReplace)
+                {
+                    SpawnDoor(door);
+                }
             }
         }
+
+
+
+    }
+
+    private void SpawnDoor(GameObject doorToReplace)
+    {
+        try
+        {
+
+            if (IsServer)
+            {
+                Vector3 position = doorToReplace.transform.position;
+                Quaternion rotation = doorToReplace.transform.rotation;
+
+                SpawnDoorServerRPC(position, rotation);
+            }
+
+
+
+            doorToReplace.SetActive(false);
+            //Debug.Log("set canOpen to true");
+        }
+        catch (Exception e)
+        {
+            return;
+        }
+    }
+
+    [Rpc(SendTo.Server)]
+    private void SpawnDoorServerRPC(Vector3 location, Quaternion rotation)
+    {
+        GameObject newDoor = Instantiate(doorPrefab, location, rotation);
+        NetworkObject newDoorNetworkObject = newDoor.GetComponentInChildren<NetworkObject>();
+        newDoorNetworkObject.Spawn();
+
+        newDoorNetworkObject.TrySetParent(gameObject.GetComponent<NetworkObject>(),true);
+
+        SetDoorSettingsRPC(newDoorNetworkObject,location,rotation);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SetDoorSettingsRPC(NetworkObjectReference doorRef, Vector3 location, Quaternion rotation)
+    {
+        doorRef.TryGet(out NetworkObject netObj);
+
+        netObj.gameObject.GetComponent<Door>().canOpen = true;
+
+        Instantiate(doorframePrefab,location, rotation);
+
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void OpenDoorsRPC()
+    {
+        OpenDoors();
     }
 
 }

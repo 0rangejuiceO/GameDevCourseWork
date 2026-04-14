@@ -225,13 +225,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fee97eef04fe6344bb0fbf45116bf5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryHandler
+  ShowTopMostFoldoutHeaderGroup: 1
   inventorySize: 4
+  playerNetworkObject: {fileID: 1077895357751974544}
   spawnOffset: 2
   inventorySlotPrefab: {fileID: 3158880364296345012, guid: 4c72a0487275c0c408be825f76092d71, type: 3}
   inventoryUIStart: {fileID: 0}
   itemSlotAction: {fileID: -9155237980119888881, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   dropItemAction: {fileID: -319944743782707436, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  camera: {fileID: 4778519201375617858}
+  camera: {fileID: 7585593024491551343}
   cameraOffset: {x: 0.65, y: -0.5, z: 1.1}
   playerController: {fileID: 1760839099045947949}
 --- !u!114 &4866826793888151498
@@ -294,11 +296,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::OnSpawn
   ShowTopMostFoldoutHeaderGroup: 1
   gameObjectsToCloseIfNotOwner:
-  - {fileID: 6664941979376709039}
+  - {fileID: 5342239593042433381}
   - {fileID: 8971557617755272479}
+  - {fileID: 8108102552843342062}
   playerCamera: {fileID: 1118746207668998231}
   audioListener: {fileID: 6509216118282228489}
-  cameraHolder: {fileID: 6664941979376709039}
+  cameraHolder: {fileID: 5342239593042433381}
 --- !u!114 &7906872352685786281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,7 +424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4778519201375617858
 Transform:
   m_ObjectHideFlags: 0
@@ -598,13 +601,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7585593024491551343}
+  - component: {fileID: 9191090326691872897}
   m_Layer: 8
   m_Name: Camera Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7585593024491551343
 Transform:
   m_ObjectHideFlags: 0
@@ -622,6 +626,52 @@ Transform:
   - {fileID: 6704894763784524073}
   m_Father: {fileID: 1674577669324907110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9191090326691872897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6664941979376709039}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
+  ShowTopMostFoldoutHeaderGroup: 1
+  NetworkTransformExpanded: 0
+  AutoOwnerAuthorityTickOffset: 1
+  PositionInterpolationType: 0
+  RotationInterpolationType: 0
+  ScaleInterpolationType: 0
+  PositionLerpSmoothing: 1
+  PositionMaxInterpolationTime: 0.1
+  RotationLerpSmoothing: 1
+  RotationMaxInterpolationTime: 0.1
+  ScaleLerpSmoothing: 1
+  ScaleMaxInterpolationTime: 0.1
+  AuthorityMode: 1
+  TickSyncChildren: 0
+  UseUnreliableDeltas: 0
+  SyncPositionX: 0
+  SyncPositionY: 0
+  SyncPositionZ: 0
+  SyncRotAngleX: 1
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 0
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  UseQuaternionSynchronization: 0
+  UseQuaternionCompression: 0
+  UseHalfFloatPrecision: 0
+  InLocalSpace: 1
+  SwitchTransformSpaceWhenParented: 0
+  Interpolate: 1
+  SlerpPosition: 0
 --- !u!1 &8108102552843342062
 GameObject:
   m_ObjectHideFlags: 0
@@ -775,6 +825,99 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PhysicsShadow
   realTransform: {fileID: 1674577669324907110}
+--- !u!1 &8552590919276086437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6790835601293943879}
+  - component: {fileID: 1023340115896485094}
+  - component: {fileID: 7908841599041427947}
+  - component: {fileID: 2018055315723270156}
+  m_Layer: 0
+  m_Name: DebugOptions
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6790835601293943879
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8552590919276086437}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.04772}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4049103304136451336}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0.2789917, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1023340115896485094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8552590919276086437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef10c97d0187362448bddc26fadc0133, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ItemSpawner
+  ShowTopMostFoldoutHeaderGroup: 1
+  items:
+  - {fileID: 11400000, guid: 27abb5b79ec51da45ad478e6b2465bcf, type: 2}
+  - {fileID: 11400000, guid: 7f393a143fbcbfa46a33a36df0a19804, type: 2}
+  - {fileID: 11400000, guid: 4002dc24d2dcb194a97e727b34969469, type: 2}
+  - {fileID: 11400000, guid: 06dbe94a7120d9f4090d8352d8cb7f6a, type: 2}
+  - {fileID: 11400000, guid: 779e78fccba9f7d45884df217111eb67, type: 2}
+  - {fileID: 11400000, guid: 69147599dc8d99a438bc78915b5f1e2d, type: 2}
+  - {fileID: 11400000, guid: dcec8bc214237d14ca0fcaedc5b22f97, type: 2}
+  - {fileID: 11400000, guid: 8ce79dfe85c62b245bfb8ed624b9d996, type: 2}
+  - {fileID: 11400000, guid: fd1b0867b6a0463418451a6e5ba27245, type: 2}
+  itemHolderPrefab: {fileID: 0}
+  player: {fileID: 1674577669324907110}
+  itemList: {fileID: 0}
+  spawnOffset: 2
+--- !u!114 &7908841599041427947
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8552590919276086437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc2d43bd68facc54ebfd2cd678e5ec29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugModifyHealth
+  ShowTopMostFoldoutHeaderGroup: 1
+  healthInputField: {fileID: 0}
+  playerHealth: {fileID: 7039595045516507681}
+--- !u!114 &2018055315723270156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8552590919276086437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2a502dc990ddfe4ba20ad3d72f95bf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugToggleGenerator
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!1 &8971557617755272479
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,6 +927,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4049103304136451336}
+  - component: {fileID: 1149343671951068742}
   m_Layer: 8
   m_Name: DebugController
   m_TagString: Untagged
@@ -803,9 +947,26 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6790835601293943879}
   m_Father: {fileID: 1674577669324907110}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1149343671951068742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8971557617755272479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0330c1d8286b0c04bb39944cda39ee4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DebugMenuHandler
+  ShowTopMostFoldoutHeaderGroup: 1
+  openDebugMenuAction: {fileID: 4307734993729217125, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  debugMenuObject: {fileID: 0}
+  playerController: {fileID: 1760839099045947949}
 --- !u!1 &9102100351806728049
 GameObject:
   m_ObjectHideFlags: 0
@@ -943,6 +1104,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4778519201375617858}
     m_Modifications:
+    - target: {fileID: -379513399066358985, guid: 2d7b8f5b709796b409165686c32fdc89, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2023492446
+      objectReference: {fileID: 0}
     - target: {fileID: 2276640436376653334, guid: 2d7b8f5b709796b409165686c32fdc89, type: 3}
       propertyPath: m_Name
       value: Torch

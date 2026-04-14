@@ -1,11 +1,24 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.Netcode;
 
-public class DebugModifyHealth : MonoBehaviour
+public class DebugModifyHealth : NetworkBehaviour
 {
     [SerializeField] TMP_InputField healthInputField;
     [SerializeField] PlayerHealth playerHealth;
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            healthInputField = GameObject.Find("ModifyHealthInput").GetComponent<TMP_InputField>();
+
+            Button modifyHealthButton = GameObject.Find("ModifyHealthButton").GetComponent<Button>();
+            modifyHealthButton.onClick.AddListener(ModifyHealth);
+
+        }
+    }
 
     public void ModifyHealth()
     {

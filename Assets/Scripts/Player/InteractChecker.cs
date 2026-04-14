@@ -2,6 +2,7 @@
 using UnityEngine.InputSystem;
 using System;
 using Unity.Netcode;
+using System.Collections.Generic;
 
 public class InteractChecker : NetworkBehaviour
 {
@@ -17,50 +18,57 @@ public class InteractChecker : NetworkBehaviour
 
     private string interactMessage="";
 
-    private void Awake()
+    public override void OnNetworkSpawn()
     {
-        miniGameHandler = GameObject.Find("MiniGameHandler");
-    }
-    private void OnEnable()
-    {
-        interactAction.action.actionMap.Enable();
-        interactAction.action.performed += OnInteract;
-        interactAction.action.Enable();
+        if (IsOwner)
+        {
+            Debug.Log("InteractChecker spawned for local player.");
 
-        holdInteractAction.action.actionMap.Enable();
-        holdInteractAction.action.performed += OnHoldInteract;
-        holdInteractAction.action.Enable();
+            miniGameHandler = GameObject.Find("MiniGameHandler");
 
-        pressItemAction.action.actionMap.Enable();
-        pressItemAction.action.performed += OnPressItem;
-        pressItemAction.action.Enable();
+            interactAction.action.performed -= OnInteract;
+            interactAction.action.performed += OnInteract;
+
+            holdInteractAction.action.performed -= OnHoldInteract;
+            holdInteractAction.action.performed += OnHoldInteract;
+
+            pressItemAction.action.performed -= OnPressItem;
+            pressItemAction.action.performed += OnPressItem;
+
+            interactAction.action.Enable();
+            holdInteractAction.action.Enable();
+            pressItemAction.action.Enable();
+        }
     }
 
     private void OnDisable()
     {
-        
+        if (!IsOwner) { return; }
         interactAction.action.performed -= OnInteract;
-        interactAction.action.Disable();
-
         holdInteractAction.action.performed -= OnHoldInteract;
-        holdInteractAction.action.Disable();
-
         pressItemAction.action.performed -= OnPressItem;
+
+        interactAction.action.Disable();
         holdInteractAction.action.Disable();
+        pressItemAction.action.Disable();
     }
 
     private void OnInteract(InputAction.CallbackContext  context)
     {
+        if (!IsOwner) { return; }
+        Debug.Log("Interact called");
         Interact();
     }
 
     private void OnHoldInteract(InputAction.CallbackContext context)
     {
+        if (!IsOwner) { return; }
         HoldItem();
     }
 
     private void OnPressItem(InputAction.CallbackContext context)
     {
+        if (!IsOwner) { return; }
         PressItem();
     }
 
@@ -201,7 +209,7 @@ public class InteractChecker : NetworkBehaviour
                 switch (itemName)
                 {
                     case "Torch":
-                        currentItem.GetComponent<Torch>().ToggleTorch();
+                        currentItem.GetComponent<Torch>().ToggleTorchRPC();
                         break;
                     case "Pistol":
                         currentItem.GetComponent<Pistol>().shoot();
@@ -266,7 +274,6 @@ public class InteractChecker : NetworkBehaviour
 
 
     }
-
 
 
 

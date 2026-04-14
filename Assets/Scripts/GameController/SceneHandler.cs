@@ -143,6 +143,11 @@ public class SceneHandler : NetworkBehaviour
             }
         }
 
+        if (IsServer)
+        {
+            MapSpawner.GetComponent<MapGenerator>().OpenDoorsRPC();
+        }
+        
 
 
         furnitureGenerator.GenerateFurniture();

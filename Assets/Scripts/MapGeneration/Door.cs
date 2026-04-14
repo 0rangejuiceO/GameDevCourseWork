@@ -1,33 +1,63 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Door : MonoBehaviour
+public class Door : NetworkBehaviour
 {
     public bool canOpen = false;
     public bool isLocked = false;
     public Rigidbody rb;
-    private int lockedChance = 20; //1 in 20 chance
+    private int lockedChance = 2; //1 in 20 chance
     bool openDirection = false;
     float openForce = 2f;
     public bool isSideWays = false;
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody>();
-        int num =  Random.Range(1, lockedChance);
-        if(num == 1)
-        {
-            isLocked = true;
-            rb.isKinematic = true;
-            gameObject.GetComponent<NavMeshObstacle>().enabled = true;
 
+    public override void OnNetworkSpawn()
+    {
+        //Debug.Log($"Location local: {transform.localPosition} Location Global: {transform.position} Rotation local: {transform.localRotation} Rotation Global: {transform.rotation}");
+
+
+        rb = GetComponent<Rigidbody>();
+
+        if (IsServer)
+        {
+
+            int num = Random.Range(1, lockedChance);
+            if (num == 1)
+            {
+                isLocked = true;
+                rb.isKinematic = true;
+                gameObject.GetComponent<NavMeshObstacle>().enabled = true;
+                TellDoorIsLockedRPC();
+            }
+        }
+        else
+        {
+            rb.isKinematic = true;
         }
 
-        if(transform.parent.parent.transform.rotation.y == 0)
+
+        if (transform.rotation.y == 0)
         {
             isSideWays = true;
         }
 
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void TellDoorIsLockedRPC()
+    {
+        isLocked = true;
+        rb.isKinematic = true;
+        gameObject.GetComponent<NavMeshObstacle>().enabled = true;
+    }
+
+
+    [Rpc(SendTo.Server)]
+    public void addForceRPC()
+    {
+        addForce();
     }
 
     public void addForce()
@@ -75,18 +105,36 @@ public class Door : MonoBehaviour
         
     }
 
+    [Rpc(SendTo.Everyone)]
+    private void TellEveryoneDoorIsUnlockedRPC()
+    {
+        if (isLocked)
+        {
+            if (IsServer)
+            {
+                rb.isKinematic = false;
+            }
+            isLocked = false;
+            Debug.Log("Door Unlocked By Another Player");
+            gameObject.GetComponent<NavMeshObstacle>().enabled = false;
+        }
+    }
+
     public void unlockDoor(string interactionMessage)
     {
         Debug.Log(interactionMessage);
 
         if (isLocked)
         {
+            if (IsServer)
+            {
+                rb.isKinematic = false;
+            }
             isLocked = false;
-            rb.isKinematic = false;
             gameObject.GetComponent<NavMeshObstacle>().enabled = false;
             InventoryHandler.onDestroyItem();
             Debug.Log("Door Unlocked");
-
+            TellEveryoneDoorIsUnlockedRPC();
         }
     }
 }

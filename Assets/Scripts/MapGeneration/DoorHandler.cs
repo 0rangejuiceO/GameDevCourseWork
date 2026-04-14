@@ -33,6 +33,28 @@ public class DoorHandler : MonoBehaviour
 
     }
 
+    public GameObject[] GetDoorsToReplace()
+    {
+        GameObject[] doorObjectsToOpen = new GameObject[doorsToOpen.Count];
+        for(int i= 0; i<doorsToOpen.Count;i++)
+        {
+            switch (doorsToOpen[i])
+            {
+                case "Red": doorObjectsToOpen[i] = forwardDoor; break;
+                case "Green": doorObjectsToOpen[i] = backDoor; break;
+                case "Blue": doorObjectsToOpen[i] = leftDoor; break;
+                case "Yellow": doorObjectsToOpen[i] = rightDoor; break;
+            }
+        }
+
+        return doorObjectsToOpen;
+    }
+
+    public GameObject GetDoorPrefab()
+    {
+        return doorPrefab;
+    }
+
     public void OpenDoors()
     {
         foreach(string door in doorsToOpen)

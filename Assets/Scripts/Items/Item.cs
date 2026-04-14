@@ -6,4 +6,5 @@ public class Item : ScriptableObject
 {
     public string displayName;
     public GameObject prefab;
+    public GameObject heldPrefab;
 }

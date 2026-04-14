@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.016
@@ -119,111 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &30458155
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 30458159}
-  - component: {fileID: 30458158}
-  - component: {fileID: 30458157}
-  - component: {fileID: 30458156}
-  m_Layer: 0
-  m_Name: Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &30458156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 30458155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.GraphicRaycaster
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &30458157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 30458155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
---- !u!223 &30458158
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 30458155}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
---- !u!224 &30458159
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 30458155}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1922563148}
-  - {fileID: 323061357}
-  - {fileID: 1612682260}
-  - {fileID: 1190822768}
-  m_Father: {fileID: 1926271859}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
 --- !u!1 &85602396
 GameObject:
   m_ObjectHideFlags: 0
@@ -1155,7 +1050,7 @@ GameObject:
   - component: {fileID: 318835425}
   - component: {fileID: 318835424}
   m_Layer: 0
-  m_Name: TogglePower
+  m_Name: TogglePowerOff
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1225,7 +1120,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1922563151}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DebugToggleGenerator, Assembly-CSharp
         m_MethodName: TogglePower
         m_Mode: 6
@@ -1298,19 +1193,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 323061356}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.04772}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 415917182}
   - {fileID: 778021497}
-  m_Father: {fileID: 30458159}
+  m_Father: {fileID: 1292905058}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &343535565
 GameObject:
@@ -1657,60 +1552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd7abf15f867ad498103eb0dd6a8d97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGenerator
-  roomPrefabs:
-    _Buckets: ffffffff03000000000000000400000001000000ffffffff02000000
-    _HashCodes: 7ca900007ea9000080a9000082a90000f0aa00000000000000000000
-    _Next: ffffffffffffffffffffffffffffffffffffffff0000000000000000
-    _Count: 5
-    _Version: 17
-    _FreeList: -1
-    _FreeCount: 0
-    _Keys:
-    - {fileID: 11400000, guid: f6c43475a82079e4582866bf8ca8ed9d, type: 2}
-    - {fileID: 11400000, guid: b6d27481180cf32468bf6cc235ac2406, type: 2}
-    - {fileID: 11400000, guid: ace722245992c76429b6afbffda32f1c, type: 2}
-    - {fileID: 11400000, guid: 823a10651d960194f9bf19ea1d4aa8bb, type: 2}
-    - {fileID: 11400000, guid: ee09e2379d8c4294a93e679c2c30548d, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    _Values: 19000000110000000900000004000000010000000000000000000000
-  standardDeviation: 50
-  minHallwayGap: 5
-  mapSize: {x: 500, y: 500}
-  maxPlacementAttempts: 1000
-  spawnRoomPrefab: {fileID: 0}
-  floorNumProbability:
-    _Buckets: ffffffff0000000001000000020000000300000004000000ffffffff
-    _HashCodes: 01000000020000000300000004000000050000000000000000000000
-    _Next: ffffffffffffffffffffffffffffffffffffffff0000000000000000
-    _Count: 5
-    _Version: 5
-    _FreeList: -1
-    _FreeCount: 0
-    _Keys: 01000000020000000300000004000000050000000000000000000000
-    _Values:
-    - 0.07
-    - 0.18
-    - 0.6
-    - 0.12
-    - 0.03
-    - 0
-    - 0
-  roomHeight: 15
-  minRoomsPerFloor: 4
-  hallwayPrefab: {fileID: 5880260964656301182, guid: e93a07fa14ae8424b8467849e656cae4, type: 3}
-  hallwayCornerPrefab: {fileID: 5880260964656301182, guid: 277bf46aa3a8fc14a8f37fb2de466648, type: 3}
-  hallwayLargeEntryPrefab: {fileID: 5880260964656301182, guid: 14f442a3dcb77fa44a363ad477b46374, type: 3}
-  hallwayThreeJunctionPrefab: {fileID: 5880260964656301182, guid: 0bc9f8a508a38fe4f9c958dffbe8cda8, type: 3}
-  hallwayFourJunctionPrefab: {fileID: 5880260964656301182, guid: e9b9458c3ce279a4ea5418edaf2232ab, type: 3}
-  hallwayWidth: 5
-  hallwayHeight: 5
-  hallwayBaseLength: 5
-  stairSegment: {fileID: 5880260964656301182, guid: cf727040aefc42a4db9a3f0ad3fd2c37, type: 3}
-  stairSegmentHeight: 5
-  numStairs: 8
-  minStairsDistance: 100
-  maxStairHallwayDistance: 150
+  ShowTopMostFoldoutHeaderGroup: 1
   doReplacement: 0
 --- !u!1 &415917181
 GameObject:
@@ -1725,7 +1567,7 @@ GameObject:
   - component: {fileID: 415917184}
   - component: {fileID: 415917183}
   m_Layer: 0
-  m_Name: Button
+  m_Name: SpawnItemButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1795,7 +1637,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1922563149}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ItemSpawner, Assembly-CSharp
         m_MethodName: spawnItem
         m_Mode: 1
@@ -2262,6 +2104,133 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 686618554}
   m_CullTransparentMesh: 1
+--- !u!1 &702858385
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 702858387}
+  - component: {fileID: 702858386}
+  - component: {fileID: 702858388}
+  - component: {fileID: 702858389}
+  m_Layer: 0
+  m_Name: SpawnerSetting
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &702858386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702858385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d3648202edaa08438ad60b06d374691, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoomTypeDataset
+  roomPrefabs:
+    _Buckets: 04000000ffffffffffffffff00000000ffffffff03000000ffffffff
+    _HashCodes: c2f800007ef800002af800009cf40000a8f500000000000000000000
+    _Next: ffffffffffffffff0100000002000000ffffffff0000000000000000
+    _Count: 5
+    _Version: 19
+    _FreeList: -1
+    _FreeCount: 0
+    _Keys:
+    - {fileID: 11400000, guid: caf69725be14fe746ab237fb0d8a222d, type: 2}
+    - {fileID: 11400000, guid: 09e116a2ed34c8447841c5c849d0785c, type: 2}
+    - {fileID: 11400000, guid: 910fbed0a340b564f9ca108c971ea5a9, type: 2}
+    - {fileID: 11400000, guid: f45c3db46ec4a794b9a4b7e3f660986a, type: 2}
+    - {fileID: 11400000, guid: a92e67640b9628846bf009aee42f2aab, type: 2}
+    - {fileID: 0}
+    - {fileID: 0}
+    _Values: 04000000080000000100000006000000010000000000000000000000
+  spawnRoomPrefab: {fileID: 11400000, guid: c0491882457ebef458db6ed3c69fad9f, type: 2}
+--- !u!4 &702858387
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702858385}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1437203584}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &702858388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702858385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c490af84590c624fb1e25f1d9b1d523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ConnecterTypeDataset
+  hallwayPrefab: {fileID: 11400000, guid: 0b33fdee60e036d4388f2d116260c99d, type: 2}
+  hallwayCornerPrefab: {fileID: 11400000, guid: 829a3c4dfa21db949941017d774cdce1, type: 2}
+  hallwayLargeEntryPrefab: {fileID: 11400000, guid: 5c97677ee9233e3429a736963fe2b827, type: 2}
+  hallwayThreeJunctionPrefab: {fileID: 11400000, guid: f5986b8c989412248b268d2982d8e0c0, type: 2}
+  hallwayFourJunctionPrefab: {fileID: 11400000, guid: 32a360c758f17714a9fbe134a9dcd532, type: 2}
+  hallwayWidth: 5
+  hallwayHeight: 5
+  hallwayBaseLength: 1
+  stairSegment: {fileID: 11400000, guid: 429904c39054d0146b1a832c2aa6a89c, type: 2}
+  stairSegmentHeight: 5
+  numStairs: 3
+  minStairsDistance: 100
+  maxStairHallwayDistance: 150
+  doorframePrefab: {fileID: 5335738911798736220, guid: dd2a52d5add5ea0478ccb8a0e3ec429e, type: 3}
+  doorPrefab: {fileID: 5844419077755454669, guid: 89479e1cb3aab5241b5c1747ed084d50, type: 3}
+--- !u!114 &702858389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702858385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09380d80c91ac874c8705cb90487a760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapSpawnerSettingsDataset
+  standardDeviation: 50
+  minHallwayGap: 9
+  mapSize: {x: 500, y: 500}
+  maxPlacementAttempts: 1000
+  floorNumProbability:
+    _Buckets: ffffffff0000000001000000020000000300000004000000ffffffff
+    _HashCodes: 01000000020000000300000004000000050000000000000000000000
+    _Next: ffffffffffffffffffffffffffffffffffffffff0000000000000000
+    _Count: 5
+    _Version: 5
+    _FreeList: -1
+    _FreeCount: 0
+    _Keys: 01000000020000000300000004000000050000000000000000000000
+    _Values:
+    - 0.07
+    - 0.18
+    - 0.6
+    - 0.12
+    - 0.03
+    - 0
+    - 0
+  roomHeight: 15
+  minRoomsPerFloor: 4
 --- !u!1 &706223384
 GameObject:
   m_ObjectHideFlags: 0
@@ -2589,7 +2558,7 @@ GameObject:
   - component: {fileID: 778021499}
   - component: {fileID: 778021498}
   m_Layer: 0
-  m_Name: Dropdown
+  m_Name: SpawnItemDropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3212,6 +3181,7 @@ RectTransform:
   - {fileID: 107596754}
   - {fileID: 1667284726}
   - {fileID: 1100829427}
+  - {fileID: 1292905058}
   - {fileID: 720846465}
   - {fileID: 538976698}
   m_Father: {fileID: 0}
@@ -3603,20 +3573,20 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1190822767}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 318835423}
   - {fileID: 2090471117}
   - {fileID: 2011017553}
   - {fileID: 1363810963}
-  m_Father: {fileID: 30458159}
+  m_Father: {fileID: 1292905058}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -114}
+  m_AnchoredPosition: {x: 0, y: -129}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1195667915
@@ -3742,6 +3712,44 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_IsOn: 1
+--- !u!1 &1292905057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1292905058}
+  m_Layer: 5
+  m_Name: DebugMenu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1292905058
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1292905057}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 323061357}
+  - {fileID: 1612682260}
+  - {fileID: 1190822768}
+  m_Father: {fileID: 915164591}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1342875365
 GameObject:
   m_ObjectHideFlags: 0
@@ -3866,7 +3874,7 @@ GameObject:
   - component: {fileID: 1363810965}
   - component: {fileID: 1363810964}
   m_Layer: 0
-  m_Name: ToggleGeneratorStatus (1)
+  m_Name: ToggleGeneratorStatusFixed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3936,7 +3944,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1922563151}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DebugToggleGenerator, Assembly-CSharp
         m_MethodName: ToggleStatus
         m_Mode: 6
@@ -4346,6 +4354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1437203584}
+  - component: {fileID: 1437203586}
   - component: {fileID: 1437203583}
   - component: {fileID: 1437203585}
   m_Layer: 0
@@ -4367,60 +4376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd7abf15f867ad498103eb0dd6a8d97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGenerator
-  roomPrefabs:
-    _Buckets: ffffffff00000000ffffffffffffffff030000000100000004000000
-    _HashCodes: 22ac0000c4ab0000e0e8000076ab0000987c01000000000000000000
-    _Next: ffffffffffffffffffffffff02000000ffffffff0000000000000000
-    _Count: 5
-    _Version: 43
-    _FreeList: -1
-    _FreeCount: 0
-    _Keys:
-    - {fileID: 11400000, guid: caf69725be14fe746ab237fb0d8a222d, type: 2}
-    - {fileID: 11400000, guid: 09e116a2ed34c8447841c5c849d0785c, type: 2}
-    - {fileID: 11400000, guid: 910fbed0a340b564f9ca108c971ea5a9, type: 2}
-    - {fileID: 11400000, guid: f45c3db46ec4a794b9a4b7e3f660986a, type: 2}
-    - {fileID: 11400000, guid: a92e67640b9628846bf009aee42f2aab, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    _Values: 0400000008000000010000000f000000010000000000000000000000
-  standardDeviation: 50
-  minHallwayGap: 9
-  mapSize: {x: 500, y: 500}
-  maxPlacementAttempts: 1000
-  spawnRoomPrefab: {fileID: 11400000, guid: c0491882457ebef458db6ed3c69fad9f, type: 2}
-  floorNumProbability:
-    _Buckets: ffffffff0000000001000000020000000300000004000000ffffffff
-    _HashCodes: 01000000020000000300000004000000050000000000000000000000
-    _Next: ffffffffffffffffffffffffffffffffffffffff0000000000000000
-    _Count: 5
-    _Version: 5
-    _FreeList: -1
-    _FreeCount: 0
-    _Keys: 01000000020000000300000004000000050000000000000000000000
-    _Values:
-    - 0.07
-    - 0.18
-    - 0.6
-    - 0.12
-    - 0.03
-    - 0
-    - 0
-  roomHeight: 15
-  minRoomsPerFloor: 4
-  hallwayPrefab: {fileID: 11400000, guid: 0b33fdee60e036d4388f2d116260c99d, type: 2}
-  hallwayCornerPrefab: {fileID: 11400000, guid: 829a3c4dfa21db949941017d774cdce1, type: 2}
-  hallwayLargeEntryPrefab: {fileID: 11400000, guid: 5c97677ee9233e3429a736963fe2b827, type: 2}
-  hallwayThreeJunctionPrefab: {fileID: 11400000, guid: f5986b8c989412248b268d2982d8e0c0, type: 2}
-  hallwayFourJunctionPrefab: {fileID: 11400000, guid: 32a360c758f17714a9fbe134a9dcd532, type: 2}
-  hallwayWidth: 5
-  hallwayHeight: 5
-  hallwayBaseLength: 1
-  stairSegment: {fileID: 11400000, guid: 429904c39054d0146b1a832c2aa6a89c, type: 2}
-  stairSegmentHeight: 5
-  numStairs: 3
-  minStairsDistance: 100
-  maxStairHallwayDistance: 150
+  ShowTopMostFoldoutHeaderGroup: 1
   doReplacement: 1
 --- !u!4 &1437203584
 Transform:
@@ -4430,12 +4386,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1437203582}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 702858387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1437203585
 MonoBehaviour:
@@ -4455,6 +4411,31 @@ MonoBehaviour:
   - {fileID: 1891031766886407984, guid: dae206a677ae7ce4c9d88b44390b554d, type: 3}
   - {fileID: 5353897617174605051, guid: 897eee77da655ff47a39147fc47946f3, type: 3}
   - {fileID: 1183504529462236529, guid: 8abd187a3539cb545a712f8f49b702e7, type: 3}
+--- !u!114 &1437203586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437203582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
+  GlobalObjectIdHash: 3937210103
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  DeferredDespawnTick: 0
+  Ownership: 1
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 0
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+  SyncOwnerTransformWhenParented: 1
+  AllowOwnerToParent: 0
 --- !u!1 &1495140681
 GameObject:
   m_ObjectHideFlags: 0
@@ -4996,19 +4977,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1612682259}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.04772}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1771079849}
   - {fileID: 2118055695}
-  m_Father: {fileID: 30458159}
+  m_Father: {fileID: 1292905058}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1620725769
 GameObject:
@@ -5541,7 +5522,7 @@ GameObject:
   - component: {fileID: 1771079851}
   - component: {fileID: 1771079850}
   m_Layer: 0
-  m_Name: InputField (TMP)
+  m_Name: ModifyHealthInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5944,143 +5925,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1888105295}
   m_CullTransparentMesh: 1
---- !u!1 &1922563147
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1922563148}
-  - component: {fileID: 1922563149}
-  - component: {fileID: 1922563150}
-  - component: {fileID: 1922563151}
-  m_Layer: 0
-  m_Name: DebugOptions
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1922563148
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1922563147}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 30458159}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1922563149
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1922563147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef10c97d0187362448bddc26fadc0133, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemSpawner
-  items:
-  - {fileID: 11400000, guid: 27abb5b79ec51da45ad478e6b2465bcf, type: 2}
-  - {fileID: 11400000, guid: 7f393a143fbcbfa46a33a36df0a19804, type: 2}
-  - {fileID: 11400000, guid: 4002dc24d2dcb194a97e727b34969469, type: 2}
-  - {fileID: 11400000, guid: 06dbe94a7120d9f4090d8352d8cb7f6a, type: 2}
-  - {fileID: 11400000, guid: 779e78fccba9f7d45884df217111eb67, type: 2}
-  - {fileID: 11400000, guid: 69147599dc8d99a438bc78915b5f1e2d, type: 2}
-  - {fileID: 11400000, guid: dcec8bc214237d14ca0fcaedc5b22f97, type: 2}
-  - {fileID: 11400000, guid: 8ce79dfe85c62b245bfb8ed624b9d996, type: 2}
-  - {fileID: 11400000, guid: fd1b0867b6a0463418451a6e5ba27245, type: 2}
-  player: {fileID: 0}
-  itemList: {fileID: 778021498}
-  spawnOffset: 2
---- !u!114 &1922563150
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1922563147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc2d43bd68facc54ebfd2cd678e5ec29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DebugModifyHealth
-  healthInputField: {fileID: 1771079850}
-  playerHealth: {fileID: 0}
---- !u!114 &1922563151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1922563147}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2a502dc990ddfe4ba20ad3d72f95bf5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DebugToggleGenerator
---- !u!1 &1926271857
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1926271859}
-  - component: {fileID: 1926271858}
-  m_Layer: 0
-  m_Name: DebugMenu
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1926271858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1926271857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0330c1d8286b0c04bb39944cda39ee4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DebugMenuHandler
-  openDebugMenuAction: {fileID: 4307734993729217125, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  debugMenuObject: {fileID: 30458155}
-  playerController: {fileID: 0}
---- !u!4 &1926271859
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1926271857}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.27899, y: 0, z: 0.04772}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 30458159}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1996784473
 GameObject:
   m_ObjectHideFlags: 0
@@ -6110,60 +5954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dd7abf15f867ad498103eb0dd6a8d97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapGenerator
-  roomPrefabs:
-    _Buckets: ffffffff00000000ffffffffffffffff0200000001000000ffffffff
-    _HashCodes: 22ac0000c4ab000076ab000000000000000000000000000000000000
-    _Next: ffffffffffffffffffffffff00000000000000000000000000000000
-    _Count: 3
-    _Version: 57
-    _FreeList: -1
-    _FreeCount: 0
-    _Keys:
-    - {fileID: 11400000, guid: caf69725be14fe746ab237fb0d8a222d, type: 2}
-    - {fileID: 11400000, guid: 09e116a2ed34c8447841c5c849d0785c, type: 2}
-    - {fileID: 11400000, guid: f45c3db46ec4a794b9a4b7e3f660986a, type: 2}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    _Values: 0a000000190000001100000000000000000000000000000000000000
-  standardDeviation: 50
-  minHallwayGap: 9
-  mapSize: {x: 500, y: 500}
-  maxPlacementAttempts: 1000
-  spawnRoomPrefab: {fileID: 11400000, guid: c0491882457ebef458db6ed3c69fad9f, type: 2}
-  floorNumProbability:
-    _Buckets: ffffffff0000000001000000020000000300000004000000ffffffff
-    _HashCodes: 01000000020000000300000004000000050000000000000000000000
-    _Next: ffffffffffffffffffffffffffffffffffffffff0000000000000000
-    _Count: 5
-    _Version: 7
-    _FreeList: -1
-    _FreeCount: 0
-    _Keys: 01000000020000000300000004000000050000000000000000000000
-    _Values:
-    - 50
-    - 0.18
-    - 0.6
-    - 0.12
-    - 0.03
-    - 0
-    - 0
-  roomHeight: 15
-  minRoomsPerFloor: 4
-  hallwayPrefab: {fileID: 11400000, guid: 0b33fdee60e036d4388f2d116260c99d, type: 2}
-  hallwayCornerPrefab: {fileID: 11400000, guid: 829a3c4dfa21db949941017d774cdce1, type: 2}
-  hallwayLargeEntryPrefab: {fileID: 11400000, guid: 5c97677ee9233e3429a736963fe2b827, type: 2}
-  hallwayThreeJunctionPrefab: {fileID: 11400000, guid: f5986b8c989412248b268d2982d8e0c0, type: 2}
-  hallwayFourJunctionPrefab: {fileID: 11400000, guid: 32a360c758f17714a9fbe134a9dcd532, type: 2}
-  hallwayWidth: 5
-  hallwayHeight: 5
-  hallwayBaseLength: 1
-  stairSegment: {fileID: 11400000, guid: 429904c39054d0146b1a832c2aa6a89c, type: 2}
-  stairSegmentHeight: 5
-  numStairs: 3
-  minStairsDistance: 100
-  maxStairHallwayDistance: 150
+  ShowTopMostFoldoutHeaderGroup: 1
   doReplacement: 0
 --- !u!4 &1996784475
 Transform:
@@ -6193,7 +5984,7 @@ GameObject:
   - component: {fileID: 2011017555}
   - component: {fileID: 2011017554}
   m_Layer: 0
-  m_Name: ToggleGeneratorStatus
+  m_Name: ToggleGeneratorStatusBroken
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6263,7 +6054,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1922563151}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DebugToggleGenerator, Assembly-CSharp
         m_MethodName: ToggleStatus
         m_Mode: 6
@@ -6437,7 +6228,7 @@ GameObject:
   - component: {fileID: 2090471119}
   - component: {fileID: 2090471118}
   m_Layer: 0
-  m_Name: TogglePower (1)
+  m_Name: TogglePowerOn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6507,7 +6298,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1922563151}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DebugToggleGenerator, Assembly-CSharp
         m_MethodName: TogglePower
         m_Mode: 6
@@ -6706,7 +6497,7 @@ GameObject:
   - component: {fileID: 2118055697}
   - component: {fileID: 2118055696}
   m_Layer: 0
-  m_Name: Button
+  m_Name: ModifyHealthButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6776,7 +6567,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1922563150}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: DebugModifyHealth, Assembly-CSharp
         m_MethodName: ModifyHealth
         m_Mode: 1
@@ -7044,10 +6835,8 @@ SceneRoots:
   - {fileID: 832575519}
   - {fileID: 404762321}
   - {fileID: 86866855}
-  - {fileID: 1437203584}
   - {fileID: 1853981716}
   - {fileID: 1620725771}
-  - {fileID: 1926271859}
   - {fileID: 370021771}
   - {fileID: 1030552997}
   - {fileID: 1996784475}
@@ -7055,3 +6844,4 @@ SceneRoots:
   - {fileID: 554440478}
   - {fileID: 915164591}
   - {fileID: 1414303879}
+  - {fileID: 702858387}
