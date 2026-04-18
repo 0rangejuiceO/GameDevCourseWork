@@ -7,7 +7,7 @@ public class Door : NetworkBehaviour
     public bool canOpen = false;
     public bool isLocked = false;
     public Rigidbody rb;
-    private int lockedChance = 2; //1 in 20 chance
+    private int lockedChance = 20; //1 in 20 chance
     bool openDirection = false;
     float openForce = 2f;
     public bool isSideWays = false;

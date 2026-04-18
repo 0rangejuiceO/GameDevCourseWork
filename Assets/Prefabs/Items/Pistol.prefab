@@ -105,6 +105,8 @@ GameObject:
   - component: {fileID: 4280793595899305281}
   - component: {fileID: 2686643178372775564}
   - component: {fileID: 3160493007475835247}
+  - component: {fileID: 9153303197901198057}
+  - component: {fileID: 5996000252997893448}
   m_Layer: 0
   m_Name: Pistol
   m_TagString: Item
@@ -181,11 +183,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pistol
   range: 25
-  damage: 2
+  damage: 10
   hitForce: 100
   shootableLayers:
     serializedVersion: 2
-    m_Bits: 203
+    m_Bits: 16577
 --- !u!135 &2351416869118163816
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -219,7 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1334543027
+  GlobalObjectIdHash: 2856066568
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -257,7 +259,7 @@ MonoBehaviour:
   ScaleLerpSmoothing: 1
   ScaleMaxInterpolationTime: 0.1
   AuthorityMode: 1
-  TickSyncChildren: 0
+  TickSyncChildren: 1
   UseUnreliableDeltas: 0
   SyncPositionX: 1
   SyncPositionY: 1
@@ -275,7 +277,7 @@ MonoBehaviour:
   UseQuaternionCompression: 0
   UseHalfFloatPrecision: 0
   InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
+  SwitchTransformSpaceWhenParented: 1
   Interpolate: 1
   SlerpPosition: 0
 --- !u!114 &3160493007475835247
@@ -292,9 +294,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkRigidbody
   ShowTopMostFoldoutHeaderGroup: 1
   NetworkRigidbodyBaseExpanded: 0
-  UseRigidBodyForMotion: 1
+  UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &9153303197901198057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2844948276570907701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 010fa7587cc61b24d8e8bf92f13478c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FollowCamera
+  heldLocalPos: {x: 0.65, y: -0.5, z: 1.1}
+  heldLocalRot: {x: 0, y: 0, z: 0, w: 1}
+  isFollowing: 0
+  camera: {fileID: 0}
+--- !u!114 &5996000252997893448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2844948276570907701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ed1fbddc3d0a4f418705ac31f6f4b53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HeldItemParentSync
+  ShowTopMostFoldoutHeaderGroup: 1
+  heldLocalPos: {x: 0.65, y: -0.5, z: 1.1}
+  heldLocalRot: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1 &3300213855575482425
 GameObject:
   m_ObjectHideFlags: 0

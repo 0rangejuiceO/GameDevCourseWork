@@ -39,6 +39,10 @@ public class InteractChecker : NetworkBehaviour
             holdInteractAction.action.Enable();
             pressItemAction.action.Enable();
         }
+        else
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnDisable()
@@ -87,13 +91,7 @@ public class InteractChecker : NetworkBehaviour
             if(hitTag == "Item")
             {
                 inventoryHandler.AddItemToInventory(hit.collider.gameObject);
-                hit.collider.gameObject.SetActive(false);
-            }
-            else if(hitTag == "GameMachine")
-            {
-                miniGameHandler.SetActive(true);
-
-                miniGameHandler.GetComponent<MiniGameHandler>().StartMiniGame(hit.collider.gameObject);
+                //hit.collider.gameObject.SetActive(false);
             }
             else if( hitTag == "Generator")
             {
@@ -116,6 +114,8 @@ public class InteractChecker : NetworkBehaviour
 
     private void HoldItem()
     {
+        Debug.Log("Hold Item Called");
+
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, rayDistance,interactableLayers))
@@ -130,22 +130,7 @@ public class InteractChecker : NetworkBehaviour
                 if (currentItem != null)
                 {
                     Debug.Log($"{currentItem.name}");
-                    if (hitTag == "NO")
-                    {
-
-                        if (currentItem.name.Contains("Key"))
-                        {
-
-                            if (hit.collider.gameObject.GetComponent<Door>().isLocked)
-                            {
-                                hit.collider.gameObject.GetComponent<Door>().isLocked = false;
-                                hit.collider.gameObject.GetComponent<Door>().rb.isKinematic = false;
-                                inventoryHandler.DropItem(currentItem, true);
-
-                            }
-                        }
-                    }
-                    else if(hitTag == "Generator")
+                    if(hitTag == "Generator")
                     {
                         if (currentItem.name.Contains("Generator"))
                         {
@@ -156,23 +141,9 @@ public class InteractChecker : NetworkBehaviour
                             }
                         }
                     }
-                    
-                    
-                    if(hitTag == "Player")
+                    else if(hit.collider.isTrigger)
                     {
-                        
-                    }
-                    else
-                    {
-                        if (currentItem.name.Contains("Medkit"))
-                        {
-                            currentItem.GetComponent<Medkit>().HealSelf();
-                            inventoryHandler.DropItem(currentItem, false);
-                        }
-                    }
-
-                    if(hit.collider.isTrigger)
-                    {
+                        Debug.Log("Found IsTrigger");
                         HoldInteractable holdInteractable = hit.collider.gameObject.GetComponent<HoldInteractable>();
 
                         if (holdInteractable != null)
@@ -180,11 +151,19 @@ public class InteractChecker : NetworkBehaviour
                             holdInteractable.GetComponent<HoldInteractable>().Interact(currentItem.name);
                         }
                     }
+                    else
+                    {
+                        currentItem = inventoryHandler.GetCurrentItem();
+                        if (currentItem.name.Contains("Medkit"))
+                        {
+                            currentItem.GetComponent<Medkit>().HealSelf();
+                        }
+                    }
 
 
 
                 }
-
+                return;
             }
             catch (Exception e)
             {
@@ -193,6 +172,18 @@ public class InteractChecker : NetworkBehaviour
             }
 
 
+        }
+        try
+        {
+            GameObject currentItem = inventoryHandler.GetCurrentItem();
+            if (currentItem.name.Contains("Medkit"))
+            {
+                currentItem.GetComponent<Medkit>().HealSelf();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning(e);
         }
     }
 

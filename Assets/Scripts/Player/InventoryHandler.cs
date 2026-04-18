@@ -27,10 +27,10 @@ public class InventoryHandler : NetworkBehaviour
     [SerializeField]private FPController.FPController playerController;
 
     public static event Action DropItemEvent;
+    public static event Action DropAllItemEvent;
     public static event Action DestroyItemEvent;
 
     private static Dictionary<ulong, GameObject> playerHeldItems = new Dictionary<ulong, GameObject>();
-
     public override void OnNetworkSpawn()
     {
         if(IsOwner)
@@ -43,6 +43,7 @@ public class InventoryHandler : NetworkBehaviour
             dropItemAction.action.Enable();
             InventoryHandler.DropItemEvent += DropItem;
             InventoryHandler.DestroyItemEvent += DestroyItem;
+            InventoryHandler.DropAllItemEvent += OnDropAllItems;
 
             inventoryUIStart = GameObject.Find("InventorySlotStartPoint").GetComponent<Transform>();
 
@@ -68,6 +69,7 @@ public class InventoryHandler : NetworkBehaviour
         dropItemAction.action.Disable();
         InventoryHandler.DropItemEvent -= DropItem;
         InventoryHandler.DestroyItemEvent -= DestroyItem;
+        InventoryHandler.DropAllItemEvent -= OnDropAllItems;
     }
 
 
@@ -100,12 +102,35 @@ public class InventoryHandler : NetworkBehaviour
         }
         currentInventory[currentSlot] = newItem;
         UpdateInventorySlot(newItem);
+        Debug.Log($"Added Item to inventory: {newItem.name}");
     }
 
     public static void onDropItem()
     { 
         Debug.Log("DropItemEvent Invoked");
         DropItemEvent?.Invoke();
+    }
+
+    public static void InvokeDropAllItems()
+    {
+        Debug.Log("DropAllItemEvent Invoked");
+        DropAllItemEvent?.Invoke();
+    }
+
+    private void OnDropAllItems()
+    {
+        foreach (var slot in currentInventory)
+        {
+            if (slot != null)
+            {
+                DropItem(slot);
+            }
+            
+        }
+        foreach(var slot in inventorySlots)
+        {
+            slot.GetComponent<InventorySlot>().SetItemName("");
+        }
     }
 
     private void OnDropItem(InputAction.CallbackContext context)
@@ -150,14 +175,15 @@ public class InventoryHandler : NetworkBehaviour
     {
 
         inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName("");
-        currentInventory[currentSlot] = null;
+
         if (destoryItem)
         {
-            Destroy(itemToDrop);
+            DestroyItem();
         }
         else
         {
             DropItem(itemToDrop);
+            currentInventory[currentSlot] = null;
         }
     }
 
@@ -174,6 +200,11 @@ public class InventoryHandler : NetworkBehaviour
         inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName("");
         currentInventory[currentSlot] = null;
 
+        if (itemToDestroy == null)
+        {
+            Debug.LogWarning($"Item missing from slot {currentSlot}");
+        }
+
         NetworkObject netObj = itemToDestroy.GetComponent<NetworkObject>();
         if (netObj != null)
         {
@@ -187,6 +218,7 @@ public class InventoryHandler : NetworkBehaviour
 
         
     }
+
 
     public GameObject GetCurrentItem()
     {
@@ -233,15 +265,21 @@ public class InventoryHandler : NetworkBehaviour
         currentSlot = newSlot;
         Debug.Log($"Current Slot {currentSlot+1}");
 
-        if (currentInventory[previousSlot] != null)
-        {
-            currentInventory[previousSlot].SetActive(false);
-        }
+        if (previousSlot == currentSlot) { return; }
 
-        if (currentInventory[currentSlot] != null)
-        {
-            currentInventory[currentSlot].SetActive(true);
-        }
+
+
+        //TellEveryoneSlotSwitchedRPC(currentInventory[currentSlot].gameObject.GetComponent<NetworkObject>(), currentInventory[previousSlot].gameObject.GetComponent<NetworkObject>());
+
+         if (currentInventory[previousSlot] != null)
+         {
+            SetActiveRPC(currentInventory[previousSlot].GetComponent<NetworkObject>(),false);
+         }
+
+         if (currentInventory[currentSlot] != null)
+         {
+            SetActiveRPC(currentInventory[currentSlot].GetComponent<NetworkObject>(), true);
+         }
 
     }
 
@@ -250,6 +288,38 @@ public class InventoryHandler : NetworkBehaviour
     {
         string itemName = newItem.GetComponent<ItemName>().actualName;
         inventorySlots[currentSlot].GetComponent<InventorySlot>().SetItemName(itemName);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void SetActiveRPC(NetworkObjectReference netObjRef, bool state)
+    {
+        netObjRef.TryGet(out NetworkObject netObj);
+
+        if (netObj != null)
+        {
+            netObj.gameObject.SetActive(state);
+        }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void TellEveryoneSlotSwitchedRPC(NetworkObjectReference netObjRefPrevious, NetworkObjectReference netObjRefCurrent )
+    {
+        netObjRefCurrent.TryGet(out NetworkObject netObjCurrent);
+        netObjRefPrevious.TryGet(out NetworkObject netObjPrevious);
+
+        if (netObjCurrent != null) 
+        {
+            Debug.Log($"Setting {netObjCurrent.gameObject.name} to active true");
+            netObjCurrent.gameObject.SetActive(true);
+        }
+
+        if (netObjPrevious != null)
+        {
+            Debug.Log($"Setting {netObjPrevious.gameObject.name} to active false");
+            netObjPrevious.gameObject.SetActive(false);
+        }
+
+
     }
 
 

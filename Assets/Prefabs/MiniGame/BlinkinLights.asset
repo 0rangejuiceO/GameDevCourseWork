@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BlinkinLights
   m_EditorClassIdentifier: Assembly-CSharp::MiniGame
   displayName: Blinking Lights
-  canvas: {fileID: 1714381490323040456, guid: b09a89aaf68a1f240a9b2c9d5a24f454, type: 3}
+  canvas: {fileID: 2260514683666820304, guid: aa8d580d5657d6745b9d3cc500dcdaf0, type: 3}

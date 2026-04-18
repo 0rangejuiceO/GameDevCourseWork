@@ -6,6 +6,7 @@ public class Medkit : MonoBehaviour
 
     public void HealSelf()
     {
+        Debug.Log("Calling Heal Self");
         PlayerHealth playerHealth = GetComponentInParent<PlayerHealth>();
         InventoryHandler inventoryHandler = GetComponentInParent<InventoryHandler>();
         if (playerHealth != null && inventoryHandler != null)

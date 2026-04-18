@@ -12,15 +12,19 @@ public class SceneHandler : NetworkBehaviour
 {
     public List<GameObject> players = new List<GameObject>();
     [SerializeField] GameObject MapSpawner;
-    [SerializeField] Vector3 spawnPosition;
     [SerializeField] NavMeshSurface surface;
     [SerializeField] FurnitureGenerator furnitureGenerator;
+    [SerializeField] GameObject leavingScreen;
 
     public static event Action spawnEnemyEvent;
     public static event Action teleportPlayersEvent;
+    public static event Action winLevelEvent;
 
     private int finalSeed;
     private bool finishedGeneration = false;
+
+    private Vector3[] spawnLiftLocations = new Vector3[12];
+
     public override void OnNetworkSpawn()
     {
         if (IsServer)
@@ -33,11 +37,13 @@ public class SceneHandler : NetworkBehaviour
 
         }
         SceneHandler.teleportPlayersEvent += TeleportPlayersRPC;
+        SceneHandler.winLevelEvent += WinLevel;
     }
 
     public override void OnNetworkDespawn()
     {
         SceneHandler.teleportPlayersEvent -= TeleportPlayersRPC;
+        SceneHandler.winLevelEvent -= WinLevel;
     }
 
     public void AddPlayer(GameObject newPlayer)
@@ -107,37 +113,45 @@ public class SceneHandler : NetworkBehaviour
 
     private IEnumerator doLaterStuff()
     {
-        foreach(GameObject player in players)
+        SpawnLiftSettings[] components = FindObjectsByType<SpawnLiftSettings>(FindObjectsSortMode.None);
+
+        foreach (SpawnLiftSettings component in components)
+        {
+            if (component.InitialSpawn == true)
+            {
+                spawnLiftLocations[component.id] = component.transform.position;
+            }
+        }
+
+        ulong playerIDUlong = NetworkManager.Singleton.LocalClientId;
+        int playerIDInt = (int)playerIDUlong;
+
+        Vector3 spawnPosition = spawnLiftLocations[playerIDInt];
+
+        foreach (GameObject player in players)
         {
             if (player.TryGetComponent(out NetworkObject netObj))
             {
                 if (netObj.IsOwner)
                 {
                     Debug.Log($"Teleporting player {player.name} with clientId {netObj.OwnerClientId}");
-                    if (spawnPosition != null)
+                    // Disable CharacterController if you have one to prevent physics fighting
+                    var cc = player.GetComponent<CharacterController>();
+                    if (cc != null) cc.enabled = false;
+
+                    if (player.TryGetComponent(out NetworkTransform netTransform))
                     {
-                        // Disable CharacterController if you have one to prevent physics fighting
-                        var cc = player.GetComponent<CharacterController>();
-                        if (cc != null) cc.enabled = false;
-
-                        if (player.TryGetComponent(out NetworkTransform netTransform))
-                        {
-                            // This will now work because IsOwner is true
-                            netTransform.Teleport(spawnPosition, Quaternion.identity, transform.localScale);
-                            Debug.Log($"Owner teleported successfully to {spawnPosition}");
-                        }
-                        else
-                        {
-                            transform.position = spawnPosition;
-                            transform.rotation = Quaternion.identity;
-                        }
-
-                        if (cc != null) cc.enabled = true;
+                        // This will now work because IsOwner is true
+                        netTransform.Teleport(spawnPosition, Quaternion.identity, transform.localScale);
+                        Debug.Log($"Owner teleported successfully to {spawnPosition}");
                     }
                     else
                     {
-                        Debug.LogError("Teleport failed: PlayerSpawnPoint not found in scene!");
+                        transform.position = spawnPosition;
+                        transform.rotation = Quaternion.identity;
                     }
+
+                    if (cc != null) cc.enabled = true;
                     break;
                 }
             }
@@ -165,6 +179,81 @@ public class SceneHandler : NetworkBehaviour
 
 
     }
+
+    private IEnumerator TeleportPlayersToSpawnRoom()
+    {
+        Debug.Log("Called teleport players to spawn room");
+        SpawnLiftSettings[] components = FindObjectsByType<SpawnLiftSettings>(FindObjectsSortMode.None);
+
+        foreach (SpawnLiftSettings component in components)
+        {
+            if (component.LobbySpawn == true)
+            {
+                spawnLiftLocations[component.id] = component.transform.position;
+            }
+        }
+
+        ulong playerIDUlong = NetworkManager.Singleton.LocalClientId;
+        int playerIDInt = (int)playerIDUlong;
+
+        Vector3 spawnPosition = spawnLiftLocations[playerIDInt];
+
+        foreach (GameObject player in players)
+        {
+            if (player.TryGetComponent(out NetworkObject netObj))
+            {
+                if (netObj.IsOwner)
+                {
+                    Debug.Log($"Teleporting player {player.name} with clientId {netObj.OwnerClientId}");
+                    // Disable CharacterController if you have one to prevent physics fighting
+                    var cc = player.GetComponent<CharacterController>();
+                    if (cc != null) cc.enabled = false;
+
+                    if (player.TryGetComponent(out NetworkTransform netTransform))
+                    {
+                        // This will now work because IsOwner is true
+                        netTransform.Teleport(spawnPosition, Quaternion.identity, transform.localScale);
+                        Debug.Log($"Owner teleported successfully to {spawnPosition}");
+                    }
+                    else
+                    {
+                        transform.position = spawnPosition;
+                        transform.rotation = Quaternion.identity;
+                    }
+
+                    if (cc != null) cc.enabled = true;
+                    break;
+                }
+            }
+        }
+        yield return null;
+    }
+
+    public static void InvokeWinLevel()
+    {
+        winLevelEvent.Invoke();
+    }
+
+    public void WinLevel()
+    {
+        SendLeavingScreenRPC();
+    }
+
+    private void CallTeleport()
+    {
+        leavingScreen.SetActive(false);
+        StartCoroutine(TeleportPlayersToSpawnRoom());
+    }
+
+    [Rpc(SendTo.Everyone,InvokePermission = RpcInvokePermission.Everyone)]
+    private void SendLeavingScreenRPC()
+    {
+        leavingScreen.SetActive(true);
+        var countDown = leavingScreen.GetComponent<CountDown>();
+        countDown.StartCountdown(10, CallTeleport);
+    }
+
+
 
     [Rpc(SendTo.Server)]
     private void requestSeedRPC(RpcParams rpcParams = default)

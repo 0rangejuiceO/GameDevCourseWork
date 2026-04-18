@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using Unity.Netcode.Components;
+using System.Collections.Generic;
 
 public class OnSpawn : NetworkBehaviour
 {
@@ -8,6 +9,9 @@ public class OnSpawn : NetworkBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private AudioListener audioListener;
     [SerializeField] private GameObject cameraHolder;
+    [SerializeField] private GameObject playerMesh;
+
+    private Vector3[] spawnLiftLocations = new Vector3[12];
 
     public override void OnNetworkSpawn()
     {
@@ -22,6 +26,7 @@ public class OnSpawn : NetworkBehaviour
         {
             SetupLocalPlayer();
             TeleportAsOwner();
+            playerMesh.SetActive(false);
         }
 
         SceneHandler sceneHandler = GameObject.Find("SceneHandler").GetComponent<SceneHandler>();
@@ -36,31 +41,37 @@ public class OnSpawn : NetworkBehaviour
         // Because the NetworkTransform is Owner Authoritative, 
         // the Owner is the ONLY one allowed to call Teleport.
 
-        GameObject spawnObj = GameObject.Find("PlayerSpawnPoint");
-        if (spawnObj != null)
+        SpawnLiftSettings[] components = FindObjectsByType<SpawnLiftSettings>(FindObjectsSortMode.None);
+
+        foreach (SpawnLiftSettings component in components)
         {
-            // Disable CharacterController if you have one to prevent physics fighting
-            var cc = GetComponent<CharacterController>();
-            if (cc != null) cc.enabled = false;
-
-            if (TryGetComponent(out NetworkTransform netTransform))
+            if(component.LobbySpawn == true)
             {
-                // This will now work because IsOwner is true
-                netTransform.Teleport(spawnObj.transform.position, spawnObj.transform.rotation, transform.localScale);
-                Debug.Log($"Owner teleported successfully to {spawnObj.transform.position}");
+                spawnLiftLocations[component.id] = component.transform.position;
             }
-            else
-            {
-                transform.position = spawnObj.transform.position;
-                transform.rotation = spawnObj.transform.rotation;
-            }
+        }
 
-            if (cc != null) cc.enabled = true;
+        ulong playerIDUlong = NetworkManager.Singleton.LocalClientId;
+        int playerIDInt = (int)playerIDUlong;
+
+        Vector3 spawnPosition = spawnLiftLocations[playerIDInt];
+
+        var cc = GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+
+        if (TryGetComponent(out NetworkTransform netTransform))
+        {
+            // This will now work because IsOwner is true
+            netTransform.Teleport(spawnPosition, Quaternion.identity, transform.localScale);
+            Debug.Log($"Owner teleported successfully to {spawnPosition}");
         }
         else
         {
-            Debug.LogError("Teleport failed: PlayerSpawnPoint not found in scene!");
+            transform.position = spawnPosition;
+            transform.rotation = Quaternion.identity;
         }
+
+        if (cc != null) cc.enabled = true;
     }
 
     private void SetupLocalPlayer()

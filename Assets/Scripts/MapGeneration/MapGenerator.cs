@@ -1384,7 +1384,7 @@ public class MapGenerator : NetworkBehaviour
 
         netObj.gameObject.GetComponent<Door>().canOpen = true;
 
-        Instantiate(doorframePrefab,location, rotation);
+        Instantiate(doorframePrefab,location, rotation,transform);
 
     }
 

@@ -4,7 +4,7 @@ using UnityEngine.Rendering;
 public class LightsMiniGame : MonoBehaviour
 {
 
-    [SerializeField]private GameObject[] lights;
+    private GameObject[] lights;
     [SerializeField]private int numRounds = 3;
     [SerializeField]private float timeBetweenRounds = 3f;
     [SerializeField]private float timeToShowLights = 2f;
@@ -18,15 +18,25 @@ public class LightsMiniGame : MonoBehaviour
     public MiniGameHandler miniGameHandler;
     private bool reportedEnd = false;
 
+
+
     void Start()
     {
+        MiniGameLight[] lightsComponents = gameObject.GetComponentsInChildren<MiniGameLight>();
+        lights = new GameObject[lightsComponents.Length];
+
+        for(int i = 0; i<lightsComponents.Length; i++)
+        {
+            lights[i] = lightsComponents[i].gameObject;
+        }
+
+
         newOrder();
         miniGameHandler = GameObject.Find("MiniGameHandler").GetComponent<MiniGameHandler>();
     }
 
     void Update()
     {
-
 
         if (lastAction == 0)
         {
