@@ -3,27 +3,16 @@ using UnityEngine.AI;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField]private Enemy enemy;
+    [SerializeField]private int enemyId;
     [SerializeField] private Transform spawnPoint;
 
     public void SpawnEnemy()
     {
-        GameObject spawnedEnemy = Instantiate(enemy.prefab,spawnPoint,transform);
+        EnemyHandler[] enemyHandlers = FindObjectsByType<EnemyHandler>(FindObjectsSortMode.None);
+        EnemyHandler enemyHandler = enemyHandlers[0];
 
-        var shadow = Instantiate(enemy.physicsShadow, spawnPoint, transform);
-        shadow.GetComponent<PhysicsShadow>().SetTransform(spawnedEnemy.transform);
+        enemyHandler.CreateEnemy(enemyId,spawnPoint.position,spawnPoint.rotation);
 
-        NavMeshAgent agent = spawnedEnemy.GetComponent<NavMeshAgent>();
-
-        NavMeshHit hit;
-        if (NavMesh.SamplePosition(spawnPoint.position, out hit, 5f, NavMesh.AllAreas))
-        {
-            agent.Warp(hit.position);
-        }
-        else
-        {
-            Debug.LogWarning("No NavMesh nearby!");
-        }
     }
 
     void OnEnable()

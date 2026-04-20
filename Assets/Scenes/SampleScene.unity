@@ -6098,6 +6098,7 @@ GameObject:
   - component: {fileID: 1620725772}
   - component: {fileID: 1620725770}
   - component: {fileID: 1620725773}
+  - component: {fileID: 1620725774}
   m_Layer: 0
   m_Name: SceneHandler
   m_TagString: Untagged
@@ -6178,6 +6179,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeathHandler
   ShowTopMostFoldoutHeaderGroup: 1
   deathScreen: {fileID: 1635712960}
+--- !u!114 &1620725774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1620725769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb928bccbe8d12e4dadd309df2b068f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyHandler
+  ShowTopMostFoldoutHeaderGroup: 1
+  enemyPrefabs:
+  - {fileID: 5377058966817100119, guid: bde652e4036989443bca673d05788b14, type: 3}
+  physicsShadow: {fileID: 2271899078041457100, guid: f14d21d205c4a494a94ca21ece0ef5c9, type: 3}
 --- !u!1 &1635712960
 GameObject:
   m_ObjectHideFlags: 0

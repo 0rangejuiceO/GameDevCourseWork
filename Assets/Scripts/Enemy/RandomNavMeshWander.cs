@@ -6,23 +6,30 @@ public class RandomNavMeshWander : NetworkBehaviour
 {
     public float wanderRadius = 10f;
     public float waitTime = 2f;
-
+    public bool wander = true;
     private NavMeshAgent agent;
     private float timer;
 
-    void Start()
+    public override void OnNetworkSpawn()
     {
-        agent = GetComponent<NavMeshAgent>();
-        timer = waitTime;
+        if (IsOwner)
+        {
+            agent = GetComponent<NavMeshAgent>();
+            timer = waitTime;
+        }
+
     }
 
     void Update()
     {
-/*        if (!IsOwner)
+        if (!IsOwner)
         {
             return;
         }
-        Debug.Log("Wandering...");*/
+        if (!wander)
+        {
+            return;
+        }
         timer += Time.deltaTime;
 
         if (timer >= waitTime && !agent.pathPending && agent.remainingDistance < 0.5f)
