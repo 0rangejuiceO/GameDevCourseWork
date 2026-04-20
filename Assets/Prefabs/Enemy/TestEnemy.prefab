@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 8492744554822601783}
   - component: {fileID: 903691061753672210}
   - component: {fileID: 3503683517425306326}
+  - component: {fileID: 6330863248744607459}
   m_Layer: 0
   m_Name: TestEnemy
   m_TagString: Enemy
@@ -153,7 +154,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 1250821549
+  GlobalObjectIdHash: 2032021982
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -179,8 +180,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomNavMeshWander
   ShowTopMostFoldoutHeaderGroup: 1
-  wanderRadius: 80
-  waitTime: 2
+  wanderRadius: 180
+  waitTime: 10
   wander: 1
 --- !u!114 &903691061753672210
 MonoBehaviour:
@@ -244,6 +245,22 @@ MonoBehaviour:
   detectionDistance: 10
   detectionAngle: 45
   requiredTime: 3
+  followPlayer: {fileID: 6330863248744607459}
+  navMeshWander: {fileID: 8492744554822601783}
+--- !u!114 &6330863248744607459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5377058966817100119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54535b4032f273242b3d45fcc495fa84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FollowPlayer
+  ShowTopMostFoldoutHeaderGroup: 1
+  follow: 0
 --- !u!1 &8588819576844260058
 GameObject:
   m_ObjectHideFlags: 0

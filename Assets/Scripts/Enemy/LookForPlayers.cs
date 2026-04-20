@@ -7,8 +7,14 @@ public class LookForPlayers : NetworkBehaviour
     [SerializeField] private float detectionAngle = 45f;
 
     [SerializeField] private float requiredTime = 3f;
+    [SerializeField] private FollowPlayer followPlayer;
+    [SerializeField] private RandomNavMeshWander navMeshWander;
+    private UnityEngine.AI.NavMeshAgent agent;
     private float[] currentTimes;
     private Transform[] players;
+    private bool[] canSee;
+    private int numCanSee = 0;
+    private bool searching = false;
 
     public override void OnNetworkSpawn()
     {
@@ -27,6 +33,11 @@ public class LookForPlayers : NetworkBehaviour
         currentTimes = new float[playerHealths.Length];
         for (int i = 0; i < playerHealths.Length; i++) { currentTimes[i] = 0f; }
 
+        canSee = new bool[playerHealths.Length];
+        for(int i =0; i < playerHealths.Length; i++) {  canSee[i] = false; }
+
+        agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+
     }
 
     private void Update()
@@ -36,6 +47,22 @@ public class LookForPlayers : NetworkBehaviour
             for (int i = 0; i < currentTimes.Length; i++)
             {
                 CheckPlayerLocation(i);
+            }
+
+            if (searching)
+            {
+                float min = float.MaxValue;
+
+                for (int i = 0; i < currentTimes.Length; i++)
+                {
+                    if (currentTimes[i] < min)
+                        min = currentTimes[i];
+                }
+
+                if(min > 30)
+                {
+                    OnWander();
+                }
             }
 
         }
@@ -63,14 +90,22 @@ public class LookForPlayers : NetworkBehaviour
                     Debug.DrawRay(transform.position, directionToPlayer * hit.distance, Color.red);
                     if(hit.transform.CompareTag("Player"))
                     {
-                        currentTimes[i] += Time.deltaTime;
-
-                        if (currentTimes[i] > requiredTime)
+                        if (canSee[i])
                         {
-                            OnPlayerDetected(i);
+                            currentTimes[i] = 0f;
                         }
+                        else
+                        {
+                            currentTimes[i] += Time.deltaTime;
 
+                            if (currentTimes[i] > requiredTime)
+                            {
+                                OnPlayerDetected(i);
+                            }
+
+                        }
                         return;
+
                     }
                 }
 
@@ -78,13 +113,61 @@ public class LookForPlayers : NetworkBehaviour
             }
 
         }
-        currentTimes[i] = 0f;
+        if (canSee[i])
+        {
+            currentTimes[i] += Time.deltaTime;
+
+            if (currentTimes[i] > requiredTime)
+            {
+                OnPlayerLost(i);
+            }
+        }
+        else
+        {
+            currentTimes[i] = 0f;
+        }
+
+            
     }
 
     private void OnPlayerDetected(int i)
     {
+        canSee[i] = true;
         Debug.Log($"Player {i} found");
+        followPlayer.SetTarget(players[i]);
+        followPlayer.follow = true;
+        navMeshWander.wander = false;
+        agent.speed = 3.5f;
+        numCanSee++;
+        searching = false;
     }
 
+    private void OnPlayerLost(int i)
+    {
+        Debug.Log($"Player {i} lost");
+        canSee[i] = false;
+        numCanSee--;
+        if(numCanSee == 0)
+        {
+            OnSearch();
+        }
+
+    }
+
+    private void OnSearch()
+    {
+        agent.speed = 2.25f;
+        followPlayer.follow = false;
+        navMeshWander.wander = true;
+        navMeshWander.wanderRadius = 30f;
+        searching = true;
+    }
+
+    private void OnWander()
+    {
+        agent.speed = 1.75f;
+        searching = false;
+        navMeshWander.wanderRadius = 180f;
+    }
 
 }
