@@ -7,8 +7,13 @@ public class LookForPlayers : NetworkBehaviour
     [SerializeField] private float detectionAngle = 45f;
 
     [SerializeField] private float requiredTime = 3f;
+    [SerializeField] private float loseSightTime = 8f;
     [SerializeField] private FollowPlayer followPlayer;
     [SerializeField] private RandomNavMeshWander navMeshWander;
+    [SerializeField] private Animator animator;
+    [SerializeField] private float walkSpeed = 1.75f;
+    [SerializeField] private float runSpeed = 4.5f;
+    [SerializeField] private float searchSpeed = 2.5f;
     private UnityEngine.AI.NavMeshAgent agent;
     private float[] currentTimes;
     private Transform[] players;
@@ -117,7 +122,7 @@ public class LookForPlayers : NetworkBehaviour
         {
             currentTimes[i] += Time.deltaTime;
 
-            if (currentTimes[i] > requiredTime)
+            if (currentTimes[i] > loseSightTime)
             {
                 OnPlayerLost(i);
             }
@@ -137,9 +142,10 @@ public class LookForPlayers : NetworkBehaviour
         followPlayer.SetTarget(players[i]);
         followPlayer.follow = true;
         navMeshWander.wander = false;
-        agent.speed = 3.5f;
+        agent.speed = runSpeed;
         numCanSee++;
         searching = false;
+        updateAnimatorRPC(runSpeed);
     }
 
     private void OnPlayerLost(int i)
@@ -156,18 +162,27 @@ public class LookForPlayers : NetworkBehaviour
 
     private void OnSearch()
     {
-        agent.speed = 2.25f;
+        agent.speed = searchSpeed;
         followPlayer.follow = false;
         navMeshWander.wander = true;
-        navMeshWander.wanderRadius = 30f;
+        navMeshWander.wanderRadius = 10f;
         searching = true;
+        updateAnimatorRPC(searchSpeed);
+
     }
 
     private void OnWander()
     {
-        agent.speed = 1.75f;
+        agent.speed = walkSpeed;
         searching = false;
         navMeshWander.wanderRadius = 180f;
+        updateAnimatorRPC(walkSpeed);
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void updateAnimatorRPC(float speed)
+    {
+        animator.SetFloat("Speed",Mathf.Abs(speed));
     }
 
 }
