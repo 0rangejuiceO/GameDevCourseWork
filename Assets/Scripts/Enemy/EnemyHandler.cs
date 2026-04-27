@@ -6,6 +6,7 @@ public class EnemyHandler : NetworkBehaviour
 {
     [SerializeField] private GameObject[] enemyPrefabs;
     [SerializeField] private GameObject physicsShadow;
+    [SerializeField] private NetworkObject spawnerNetObj;
 
     public void CreateEnemy(int enemyId, Vector3 location, Quaternion rotation)
     {
@@ -37,6 +38,11 @@ public class EnemyHandler : NetworkBehaviour
 
 
         enemy.GetComponent<NetworkObject>().Spawn();
+
+        enemy.GetComponent<NetworkObject>().TrySetParent(spawnerNetObj);
+        shadow.transform.parent = spawnerNetObj.transform;
+
+
 
     }
 }

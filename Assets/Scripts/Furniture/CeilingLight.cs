@@ -14,7 +14,7 @@ public class CeilingLight : MonoBehaviour
         Generator.OnGeneratorStateChanged -= HandleGeneratorState;
     }
 
-    void HandleGeneratorState(bool state)
+    void HandleGeneratorState(bool state,bool fromNetwork)
     {
         lightSource.enabled = state;
     }

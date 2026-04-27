@@ -2305,6 +2305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 1
 --- !u!4 &6522168962569191613 stripped
 Transform:
@@ -2467,6 +2468,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 0
 --- !u!4 &5487223191941072311 stripped
 Transform:
@@ -2551,6 +2553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 7
 --- !u!4 &7733874329411730323 stripped
 Transform:
@@ -2640,6 +2643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 3
 --- !u!1001 &5333878190760066347
 PrefabInstance:
@@ -2724,6 +2728,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 5
 --- !u!1001 &5445937290644530123
 PrefabInstance:
@@ -2808,6 +2813,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 2
 --- !u!1001 &5454129436303054503
 PrefabInstance:
@@ -2892,6 +2898,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 9
 --- !u!1001 &5517466929770932306
 PrefabInstance:
@@ -3042,6 +3049,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 10
 --- !u!1001 &7417133679286746332
 PrefabInstance:
@@ -3126,6 +3134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 6
 --- !u!1001 &7429274094514148708
 PrefabInstance:
@@ -3366,6 +3375,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 8
 --- !u!1001 &7795342039433814194
 PrefabInstance:
@@ -3450,6 +3460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 4
 --- !u!1001 &7993193382622397177
 PrefabInstance:
@@ -3534,6 +3545,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpawnLiftSettings
   InitialSpawn: 1
+  LobbySpawn: 0
   id: 11
 --- !u!1001 &8503140894426832392
 PrefabInstance:

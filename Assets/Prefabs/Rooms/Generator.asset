@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca2c459b36aa874794d9511f2c31331, type: 3}
+  m_Name: Generator
+  m_EditorClassIdentifier: Assembly-CSharp::RoomType
+  displayName: GeneratorRoom
+  roomPrefab: {fileID: 2412894164170035519, guid: 60a46ea32881c674f80fa88a30c0b3b4, type: 3}
+  actualPrefab: {fileID: 5909737081127327904, guid: f6990e52e65c1024c9dc0af0f1996f16, type: 3}
+  actualPrefabInverted: {fileID: 0}
+  minDistanceFromSpawn: 0
+  minDistanceFromSameType: 50

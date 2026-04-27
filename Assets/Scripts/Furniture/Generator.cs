@@ -4,15 +4,21 @@ using UnityEngine;
 public class Generator : MonoBehaviour
 {
     public bool isOn;
-    public static bool isBroken = false;
+    public bool isBroken = false;
 
-    public static event Action<bool> OnGeneratorStateChanged;
-    public static event Action<bool> OnGeneratorBrokenStatusChanged;
+    public static event Action<bool,bool> OnGeneratorStateChanged;
+    public static event Action<bool,bool> OnGeneratorBrokenStatusChanged;
+
+
+    private PowerHandler powerHandler;
 
     void OnEnable()
     {
         Generator.OnGeneratorStateChanged += HandleGeneratorPower;
         Generator.OnGeneratorBrokenStatusChanged += HandleGeneratorState;
+
+        powerHandler = FindFirstObjectByType<PowerHandler>();
+
     }
 
     void OnDisable()
@@ -21,18 +27,17 @@ public class Generator : MonoBehaviour
         Generator.OnGeneratorBrokenStatusChanged -= HandleGeneratorState;
     }
 
-    void HandleGeneratorState(bool state)
+    private void HandleGeneratorState(bool state,bool fromNetwork)
     {
         isBroken = state;
         if (isBroken)
         {
             TurnOff();
-            isOn = false;
         }
 
     }
 
-    private void HandleGeneratorPower(bool power)
+    private void HandleGeneratorPower(bool power,bool fromNetwork)
     {
         isOn = power;
     }
@@ -41,13 +46,13 @@ public class Generator : MonoBehaviour
     public void TurnOn()
     {
         
-        OnGeneratorStateChanged?.Invoke(true);
+        OnGeneratorStateChanged?.Invoke(true,false);
     }
 
     public void TurnOff()
     {
 
-        OnGeneratorStateChanged?.Invoke(false);
+        OnGeneratorStateChanged?.Invoke(false,false);
     }
 
     public void FlipState()
@@ -67,11 +72,16 @@ public class Generator : MonoBehaviour
         }
     }
 
-    private int powerFailChance = 5000; // 1 in 5000 chance per game tick
+    public void FixGenerator()
+    {
+        OnGeneratorBrokenStatusChanged(!isBroken, false);
+    }
+
+    private int powerFailChance = 20000000; // 1 in x chance per game tick this runs separately for each player so more players higher chance of lights turning off
 
     private void Update()
     {
-        if (isOn)
+        if (!isOn)
         {
             return;
         }
@@ -79,21 +89,22 @@ public class Generator : MonoBehaviour
         int num = UnityEngine.Random.Range(1, powerFailChance);
         if (num == 1)
         {
+            Debug.Log("Lights randomly turned off");
             TurnOff();
         }
     }
 
-    public static void SetGeneratorPower(bool state)
+    public static void SetGeneratorPower(bool state, bool networkSend = false)
     {
-        OnGeneratorStateChanged?.Invoke(state);
+        OnGeneratorStateChanged?.Invoke(state,networkSend);
     }
 
-    public static void SetGeneratorBroken(bool state)
+    public static void SetGeneratorBroken(bool state, bool networkSend = false)
     {
-        OnGeneratorBrokenStatusChanged?.Invoke(state);
+        OnGeneratorBrokenStatusChanged?.Invoke(state,networkSend);
     }
 
-    public static bool GetGeneratorBroken()
+    public bool GetGeneratorBroken()
     {
         return isBroken;
     }

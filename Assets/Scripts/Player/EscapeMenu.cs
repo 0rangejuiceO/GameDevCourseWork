@@ -34,4 +34,10 @@ public class EscapeMenu : MonoBehaviour
             UnityEditor.EditorApplication.isPlaying = false;
         #endif
     }
+
+    public void QuitToMainMenu()
+    {
+        Debug.Log("Quitting to Main Menu...");
+        GameLobby.Instance.LeaveLobby();
+    }
 }

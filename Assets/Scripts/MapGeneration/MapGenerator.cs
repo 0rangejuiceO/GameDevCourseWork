@@ -40,8 +40,9 @@ public class MapGenerator : NetworkBehaviour
       private int maxStairHallwayDistance;
       private GameObject doorframePrefab;
       private GameObject doorPrefab;
+    private GameObject lockerPrefab;
     public bool doReplacement = false;
-
+    public List<LevelSettings> levels = new List<LevelSettings>();
 
 
     private Dictionary<RoomType, List<GameObject>> roomObjectLists = new Dictionary<RoomType, List<GameObject>>();
@@ -59,8 +60,50 @@ public class MapGenerator : NetworkBehaviour
     private System.Random rng;
     private Dictionary<int,GameObject> doors = new Dictionary<int,GameObject>();
 
-    public async Task<bool> BeginMapGeneration(int seed)
+    private void GetRoomsFromLevel(int levelID)
     {
+        LevelSettings level= null;
+
+        roomPrefabs.Clear();
+
+        foreach(LevelSettings lvl in levels)
+        {
+            if(lvl.LevelID == levelID)
+            {
+                level = lvl;
+            }
+        }
+
+        if(level == null)
+        {
+            Debug.LogError("No level for specified ID");
+            GetRoomsFromLevel(0);
+            return;
+        }
+
+        var roomDataset = GetComponentInParent<RoomTypeDataset>();
+        // Room data
+        List<RoomType> roomTypes = roomDataset.GetRoomPrefabs();
+
+        foreach(RoomEntry entry in level.RoomEntries)
+        {
+            foreach(RoomType roomType in roomTypes)
+            {
+                if(entry.roomName == roomType.displayName)
+                {
+                    roomPrefabs.Add(roomType, entry.count);
+                }
+            }
+        }
+        spawnRoomPrefab = roomDataset.GetSpawnRoom();
+
+        numStairs = level.MaxStaircases;
+    }
+
+    public async Task<bool> BeginMapGeneration(int seed, int levelID)
+    {
+        GetRoomsFromLevel(levelID);
+
         GetVariables();
 
         rng = new System.Random(seed);
@@ -168,21 +211,54 @@ public class MapGenerator : NetworkBehaviour
         return true;
     }
 
+    public async Task RemoveAllExistingThings()
+    {
+
+        List<NetworkObject> toRemove = new List<NetworkObject>();
+
+        foreach (Transform child in transform)
+        {
+            NetworkObject netObj = child.GetComponent<NetworkObject>();
+            if (netObj != null)
+            {
+                toRemove.Add(netObj);
+            }
+            else{
+                Destroy(child.gameObject);
+            }
+        }
+
+        if (IsServer)
+        {
+            foreach (var netObj in toRemove)
+            {
+                if (netObj != null && netObj.IsSpawned)
+                {
+                    if (NetworkManager.Singleton.IsServer)
+                    {
+                        netObj.Despawn(true);
+                    }
+                }
+            }
+        }
+
+
+    }
+
+
     private void GetVariables()
     {
-        var roomDataset = GetComponentInParent<RoomTypeDataset>();
+
         var mapSettings = GetComponentInParent<MapSpawnerSettingsDataset>();
         var connecterDataset = GetComponentInParent<ConnecterTypeDataset>();
 
-        if (roomDataset == null || mapSettings == null || connecterDataset == null)
+        if (mapSettings == null || connecterDataset == null)
         {
             Debug.LogError("Missing dataset components in parent hierarchy!");
             return;
         }
 
-        // Room data
-        roomPrefabs = roomDataset.GetRoomPrefabs();
-        spawnRoomPrefab = roomDataset.GetSpawnRoom();
+
 
         // Map settings
         standardDeviation = mapSettings.GetStandardDeviation();
@@ -206,12 +282,13 @@ public class MapGenerator : NetworkBehaviour
 
         stairSegment = connecterDataset.GetStairSegment();
         stairSegmentHeight = connecterDataset.GetStairSegmentHeight();
-        numStairs = connecterDataset.GetNumStairs();
         minStairsDistance = connecterDataset.GetMinStairsDistance();
         maxStairHallwayDistance = connecterDataset.GetMaxStairHallwayDistance();
 
         doorframePrefab = connecterDataset.GetDoorframePrefab();
         doorPrefab = connecterDataset.GetDoorBodyPrefab();
+
+        lockerPrefab = connecterDataset.GetLockerPrefab();
     }
 
     private void DoReplacement()
@@ -1362,6 +1439,23 @@ public class MapGenerator : NetworkBehaviour
         catch (Exception e)
         {
             return;
+        }
+    }
+
+    public void SpawnLockers()
+    {
+        if (IsServer)
+        {
+            LockerSpawnTransform[] lockerSpawns = FindObjectsByType<LockerSpawnTransform>(FindObjectsSortMode.None);
+
+            foreach(LockerSpawnTransform spawn in lockerSpawns)
+            {
+                GameObject newLocker = Instantiate(lockerPrefab, spawn.spawnTransform.position, spawn.spawnTransform.rotation);
+                NetworkObject newLockerNetworkObject = newLocker.GetComponent<NetworkObject>();
+                newLockerNetworkObject.Spawn();
+                newLockerNetworkObject.TrySetParent(gameObject.GetComponent<NetworkObject>(), true);
+            }
+
         }
     }
 

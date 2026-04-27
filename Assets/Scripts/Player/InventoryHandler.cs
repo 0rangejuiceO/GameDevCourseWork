@@ -2,8 +2,6 @@ using FPController;
 using System;
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor.PackageManager;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

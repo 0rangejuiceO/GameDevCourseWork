@@ -1,13 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RoomTypeDataset : MonoBehaviour
 {
     [Header("Map Settings")]
-    [Space(15)]
-    [SerializeField] private RoomTypeIntDictionary roomPrefabs = new RoomTypeIntDictionary();
-    [Space(150)]
+    public List<RoomType> roomPrefabs = new List<RoomType>();
     [SerializeField] private RoomType spawnRoomPrefab;
-    public RoomTypeIntDictionary GetRoomPrefabs() { return roomPrefabs; }
+    public List<RoomType> GetRoomPrefabs() { return roomPrefabs; }
     public RoomType GetSpawnRoom() { return spawnRoomPrefab; }
 
 

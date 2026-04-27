@@ -17,20 +17,22 @@ public class DebugToggleGenerator : NetworkBehaviour
             powerOffButton.onClick.AddListener(() => TogglePower(false));
 
             Button breakButton = GameObject.Find("ToggleGeneratorStatusBroken").GetComponent<Button>();
-            breakButton.onClick.AddListener(() => ToggleStatus(false));
+            breakButton.onClick.AddListener(() => ToggleStatus(true));
 
             Button fixButton = GameObject.Find("ToggleGeneratorStatusFixed").GetComponent<Button>();
-            fixButton.onClick.AddListener(() => ToggleStatus(true));
+            fixButton.onClick.AddListener(() => ToggleStatus(false));
         }
     }
 
     public void TogglePower(bool isOn)
     {
+        Debug.Log($"Power is {isOn}");
         Generator.SetGeneratorPower(isOn);
     }
 
     public void ToggleStatus(bool status)
     {
+        Debug.Log($"Generator is Broken {status}");
         Generator.SetGeneratorBroken(status);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using FPController;
 using Unity.Netcode;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 public class MiniGameHandler : NetworkBehaviour
 {

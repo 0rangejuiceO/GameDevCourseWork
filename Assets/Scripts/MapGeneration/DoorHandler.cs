@@ -40,10 +40,10 @@ public class DoorHandler : MonoBehaviour
         {
             switch (doorsToOpen[i])
             {
-                case "Red": doorObjectsToOpen[i] = forwardDoor; break;
-                case "Green": doorObjectsToOpen[i] = backDoor; break;
-                case "Blue": doorObjectsToOpen[i] = leftDoor; break;
-                case "Yellow": doorObjectsToOpen[i] = rightDoor; break;
+                case "Red": if (forwardDoor != null) { doorObjectsToOpen[i] = forwardDoor; } break;
+                case "Green": if (backDoor != null) { doorObjectsToOpen[i] = backDoor; } break;
+                case "Blue": if (leftDoor != null) { doorObjectsToOpen[i] = leftDoor; } break;
+                case "Yellow": if (rightDoor != null) { doorObjectsToOpen[i] = rightDoor; } break;
             }
         }
 

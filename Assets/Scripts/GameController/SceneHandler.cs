@@ -15,13 +15,18 @@ public class SceneHandler : NetworkBehaviour
     [SerializeField] NavMeshSurface surface;
     [SerializeField] FurnitureGenerator furnitureGenerator;
     [SerializeField] GameObject leavingScreen;
+    [SerializeField] private LobbyNameHolder lobbyNameHolder;
+    public List<LevelSettings> levels = new List<LevelSettings>();
 
     public static event Action spawnEnemyEvent;
     public static event Action teleportPlayersEvent;
     public static event Action winLevelEvent;
 
+    private int currentLevel=0;
     private int finalSeed;
     private bool finishedGeneration = false;
+    private bool inLobby = true;
+    private bool startGame = false;
 
     private Vector3[] spawnLiftLocations = new Vector3[12];
 
@@ -60,7 +65,7 @@ public class SceneHandler : NetworkBehaviour
         {
             masterSeed = (int)System.DateTime.Now.Ticks;
             //masterSeed = 420;
-            var task = MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration(masterSeed);
+            var task = MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration(masterSeed, currentLevel);
 
             yield return new WaitUntil(() => task.IsCompleted);
 
@@ -82,6 +87,14 @@ public class SceneHandler : NetworkBehaviour
 
     }
 
+
+    [Rpc(SendTo.Server,InvokePermission = RpcInvokePermission.Everyone)]
+    public void LoadNextLevelRPC()
+    {
+        StartCoroutine(DoMapGeneration());
+    }
+
+
     [Rpc(SendTo.NotOwner)]
     private void CreateMapRPC(int seed)
     {
@@ -90,7 +103,7 @@ public class SceneHandler : NetworkBehaviour
 
     private IEnumerator CreateMap(int seed)
     {
-        var task = MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration(seed);
+        var task = MapSpawner.GetComponent<MapGenerator>().BeginMapGeneration(seed, currentLevel);
 
         yield return new WaitUntil(() => task.IsCompleted);
 
@@ -160,6 +173,7 @@ public class SceneHandler : NetworkBehaviour
         if (IsServer)
         {
             MapSpawner.GetComponent<MapGenerator>().OpenDoorsRPC();
+            MapSpawner.GetComponent<MapGenerator>().SpawnLockers();
         }
         
 
@@ -243,6 +257,11 @@ public class SceneHandler : NetworkBehaviour
     {
         leavingScreen.SetActive(false);
         StartCoroutine(TeleportPlayersToSpawnRoom());
+        inLobby = true;
+        NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<ReadyCheckListener>().UnReady();
+        currentLevel++;
+        RemoveAllSpawnedRPC();
+
     }
 
     [Rpc(SendTo.Everyone,InvokePermission = RpcInvokePermission.Everyone)]
@@ -286,8 +305,45 @@ public class SceneHandler : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     private void TeleportPlayersRPC()
     {
-        Debug.Log("told to teleport");
-        StartCoroutine(doLaterStuff());
+        if (!startGame)
+        {
+            lobbyNameHolder.Hide();
+            if (IsServer)
+            {
+                GameLobby.Instance.DeleteLobby();
+            }
+
+        }
+
+        if (inLobby)
+        {
+            inLobby = false;
+            Debug.Log("told to teleport");
+            StartCoroutine(doLaterStuff());
+        }
+
     }
+
+    [Rpc(SendTo.Everyone)]
+    private void RemoveAllSpawnedRPC()
+    {
+        RemoveAllSpawned();
+
+    }
+
+    private async void RemoveAllSpawned()
+    {
+        await MapSpawner.GetComponent<MapGenerator>().RemoveAllExistingThings();
+        OnAllObjectsRemoved();
+    }
+
+    private void OnAllObjectsRemoved()
+    {
+        if (IsServer)
+        {
+            LoadNextLevelRPC();
+        }
+    }
+
 
 }

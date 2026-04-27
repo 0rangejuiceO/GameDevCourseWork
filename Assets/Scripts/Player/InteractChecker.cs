@@ -10,7 +10,6 @@ public class InteractChecker : NetworkBehaviour
     [SerializeField]private InputActionReference interactAction;
     [SerializeField] private InputActionReference holdInteractAction;
     [SerializeField] private InputActionReference pressItemAction;
-    [SerializeField] private float openDoorForce = 5f;
     [SerializeField] private InventoryHandler inventoryHandler;
     [SerializeField]private GameObject miniGameHandler;
     [SerializeField] private Camera playerCamera;
@@ -93,10 +92,6 @@ public class InteractChecker : NetworkBehaviour
                 inventoryHandler.AddItemToInventory(hit.collider.gameObject);
                 //hit.collider.gameObject.SetActive(false);
             }
-            else if( hitTag == "Generator")
-            {
-                hit.collider.gameObject.GetComponent<Generator>().FlipState();
-            }
             else
             {
                 if(hit.collider.isTrigger)
@@ -130,18 +125,7 @@ public class InteractChecker : NetworkBehaviour
                 if (currentItem != null)
                 {
                     Debug.Log($"{currentItem.name}");
-                    if(hitTag == "Generator")
-                    {
-                        if (currentItem.name.Contains("Generator"))
-                        {
-                            if (Generator.GetGeneratorBroken())
-                            {
-                                Generator.SetGeneratorBroken(false);
-                                inventoryHandler.DropItem(currentItem, true);
-                            }
-                        }
-                    }
-                    else if(hit.collider.isTrigger)
+                    if(hit.collider.isTrigger)
                     {
                         Debug.Log("Found IsTrigger");
                         HoldInteractable holdInteractable = hit.collider.gameObject.GetComponent<HoldInteractable>();

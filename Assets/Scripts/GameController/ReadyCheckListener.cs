@@ -47,6 +47,12 @@ public class ReadyCheckListener : NetworkBehaviour
         SendReadyStatusServerRpc(isReady);
     }
 
+    public void UnReady()
+    {
+        isReady = false;
+        SendReadyStatusServerRpc(false);
+    }
+
 
     [Rpc(SendTo.Server)]
     public void SendReadyStatusServerRpc(bool isReady)

@@ -17,6 +17,7 @@ public class ConnecterTypeDataset : MonoBehaviour
     [SerializeField] private int maxStairHallwayDistance;
     [SerializeField] private GameObject doorframePrefab;
     [SerializeField] private GameObject doorPrefab;
+    [SerializeField] private GameObject lockerPrefab;
 
     public ConnecterType GetHallwayPrefab() {  return hallwayPrefab; }
 
@@ -36,5 +37,6 @@ public class ConnecterTypeDataset : MonoBehaviour
     public GameObject GetDoorframePrefab() { return doorframePrefab;}
     public GameObject GetDoorBodyPrefab() { return doorPrefab;}
 
+    public GameObject GetLockerPrefab() { return lockerPrefab; }
 
 }
