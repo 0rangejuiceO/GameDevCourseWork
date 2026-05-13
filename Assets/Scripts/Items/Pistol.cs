@@ -1,19 +1,26 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Pistol : MonoBehaviour
+public class Pistol : NetworkBehaviour
 {
     [SerializeField]private float range = 25f;
     [SerializeField]private int damage = 10;
     [SerializeField]private float hitForce = 100f;
     [SerializeField]private LayerMask shootableLayers;
+    [SerializeField]private AudioSource shootSound;
     private int ammo = 6;
     private Camera cam;
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
-        cam = Camera.main;
+        if (IsOwner)
+        {
+            cam = Camera.main;
+        }
+
     }
+
 
     public void shoot()
     {
@@ -22,6 +29,8 @@ public class Pistol : MonoBehaviour
             Debug.Log("Out of ammo!");
             return;
         }
+
+        PlayShootSoundRPC();
 
         RaycastHit hit;
 
@@ -48,6 +57,12 @@ public class Pistol : MonoBehaviour
 
         }
         ammo--;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    private void PlayShootSoundRPC()
+    {
+        shootSound.Play();
     }
 
 

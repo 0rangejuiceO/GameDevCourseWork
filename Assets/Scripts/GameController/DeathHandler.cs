@@ -36,7 +36,7 @@ public class DeathHandler : NetworkBehaviour
 
         NetworkObject localPlayerNetObj = NetworkManager.Singleton.LocalClient.PlayerObject;
 
-        FPController.FPController fpController = localPlayerNetObj.GetComponent<FPController.FPController>();
+        NewPlayerInput fpController = localPlayerNetObj.GetComponent<NewPlayerInput>();
         fpController.LockMovement = true;
         StartCoroutine(TeleportPlayerToDeathTub());
 
@@ -75,7 +75,7 @@ public class DeathHandler : NetworkBehaviour
         NetworkObject localPlayerNetObj = NetworkManager.Singleton.LocalClient.PlayerObject;
         currentTarget.GetComponent<SpectatorCamera>().camera.SetActive(false);
         localPlayerNetObj.gameObject.GetComponent<MainCameraObjectReference>().mainCamera.SetActive(true);
-        FPController.FPController fpController = localPlayerNetObj.GetComponent<FPController.FPController>();
+        NewPlayerInput fpController = localPlayerNetObj.GetComponent<NewPlayerInput>();
         fpController.LockMovement = false;
         localPlayerNetObj.gameObject.GetComponent<PlayerHealth>().Respawn();
         StartCoroutine(TeleportPlayersToSpawnRoom());
@@ -84,6 +84,7 @@ public class DeathHandler : NetworkBehaviour
     private IEnumerator TeleportPlayersToSpawnRoom()
     {
         Debug.Log("Called teleport players to spawn room");
+
         SpawnLiftSettings[] components = FindObjectsByType<SpawnLiftSettings>(FindObjectsSortMode.None);
 
 

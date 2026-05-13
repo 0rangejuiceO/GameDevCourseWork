@@ -5,6 +5,7 @@ public class Torch : NetworkBehaviour
 {
     private bool on = false;
     [SerializeField]private Light torchLight;
+    [SerializeField]private AudioSource audioSource;
 
     public void ToggleTorch()
     {
@@ -16,5 +17,6 @@ public class Torch : NetworkBehaviour
     public void ToggleTorchRPC()
     {
         ToggleTorch();
+        audioSource.Play();
     }
 }

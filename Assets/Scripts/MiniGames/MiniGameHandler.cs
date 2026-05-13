@@ -17,7 +17,7 @@ public class MiniGameHandler : NetworkBehaviour
     [SerializeField] private GameObject defaultReward;
 
     [Header("Global Refs")]
-    private FPController.FPController fpController;
+    private NewPlayerInput fpController;
     [SerializeField] private GameObject canvas;
 
     private GameObject currentMiniGame;
@@ -25,7 +25,7 @@ public class MiniGameHandler : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        fpController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<FPController.FPController>();
+        fpController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<NewPlayerInput>();
         if(fpController == null)
         {
             Debug.Log("Couldnt find fpController");
@@ -59,7 +59,7 @@ public class MiniGameHandler : NetworkBehaviour
 
     public void StartMiniGame(GameObject usedMachine)
     {
-        fpController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<FPController.FPController>();
+        fpController = NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<NewPlayerInput>();
         canvas.SetActive(true);
         GameObject game = SelectMiniGame();
         var newGame = Instantiate(game, transform.position, Quaternion.identity,canvas.transform);

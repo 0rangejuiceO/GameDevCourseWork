@@ -7,6 +7,7 @@ public class FollowPlayer : NetworkBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private int damage = 50;
     [SerializeField] private float punchCooldown = 1.5f;
+    [SerializeField] private AudioSource punchSound;
     private Transform target;
     private UnityEngine.AI.NavMeshAgent agent;
     public bool follow = false;
@@ -14,6 +15,7 @@ public class FollowPlayer : NetworkBehaviour
     private float sampleDistance = 2f;
     private float currentPunchCD;
     private bool timerRunning = false;
+
 
 
     public override void OnNetworkSpawn()
@@ -87,7 +89,7 @@ public class FollowPlayer : NetworkBehaviour
 
         if (target != null)
         {
-            target.GetComponent<PlayerHealth>().RequestDamageRPC(damage);
+            target.GetComponentInParent<PlayerHealth>().RequestDamageRPC(damage);
         }
     }
 
@@ -96,6 +98,7 @@ public class FollowPlayer : NetworkBehaviour
     {
         Debug.Log("Calling Punch Trigger");
         animator.SetTrigger("Punch");
+        punchSound.Play();
     }
 
 

@@ -7,7 +7,7 @@ public class DebugMenuHandler : NetworkBehaviour
 {
     [SerializeField] private InputActionReference openDebugMenuAction;
     [SerializeField] private GameObject debugMenuObject;
-    [SerializeField]private FPController.FPController playerController;
+    [SerializeField]private NewPlayerInput playerController;
 
     private bool menuIsOpen = true;
 

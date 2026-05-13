@@ -140,6 +140,7 @@ public class SceneHandler : NetworkBehaviour
         int playerIDInt = (int)playerIDUlong;
 
         Vector3 spawnPosition = spawnLiftLocations[playerIDInt];
+        spawnPosition.y += 1f;
 
         foreach (GameObject player in players)
         {

@@ -16,6 +16,8 @@ public class DoorHandler : MonoBehaviour
     [Header("DoorsToOpen")]
     public List<string> doorsToOpen = new List<string>();
     [SerializeField] private GameObject doorPrefab;
+    [SerializeField] private bool alsoSpawnDoorFrame = false;
+    [SerializeField] private GameObject doorFramePrefab;
 
     private void OnDrawGizmosSelected()
     {
@@ -40,14 +42,19 @@ public class DoorHandler : MonoBehaviour
         {
             switch (doorsToOpen[i])
             {
-                case "Red": if (forwardDoor != null) { doorObjectsToOpen[i] = forwardDoor; } break;
-                case "Green": if (backDoor != null) { doorObjectsToOpen[i] = backDoor; } break;
-                case "Blue": if (leftDoor != null) { doorObjectsToOpen[i] = leftDoor; } break;
-                case "Yellow": if (rightDoor != null) { doorObjectsToOpen[i] = rightDoor; } break;
+                case "Red": if (forwardDoor != null) { doorObjectsToOpen[i] = forwardDoor; if (alsoSpawnDoorFrame) { SpawnDoorFrame(forwardDoor); } } break;
+                case "Green": if (backDoor != null) { doorObjectsToOpen[i] = backDoor; if (alsoSpawnDoorFrame) { SpawnDoorFrame(backDoor); } } break;
+                case "Blue": if (leftDoor != null) { doorObjectsToOpen[i] = leftDoor; if (alsoSpawnDoorFrame) { SpawnDoorFrame(leftDoor); } } break;
+                case "Yellow": if (rightDoor != null) { doorObjectsToOpen[i] = rightDoor; if (alsoSpawnDoorFrame) { SpawnDoorFrame(rightDoor); } } break;
             }
         }
 
         return doorObjectsToOpen;
+    }
+
+    private void SpawnDoorFrame(GameObject transformObject)
+    {
+        Instantiate(doorFramePrefab, transformObject.transform.position, transformObject.transform.rotation, transform);
     }
 
     public GameObject GetDoorPrefab()

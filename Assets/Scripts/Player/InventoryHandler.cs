@@ -22,7 +22,7 @@ public class InventoryHandler : NetworkBehaviour
     [SerializeField] private InputActionReference dropItemAction;
     [SerializeField] private Transform camera;
     [SerializeField] private Vector3 cameraOffset;
-    [SerializeField]private FPController.FPController playerController;
+    [SerializeField]private NewPlayerInput playerController;
 
     public static event Action DropItemEvent;
     public static event Action DropAllItemEvent;

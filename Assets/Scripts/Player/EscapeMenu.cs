@@ -23,6 +23,17 @@ public class EscapeMenu : MonoBehaviour
     {
         isEscapeMenuOpen = !isEscapeMenuOpen;
         escapeMenuUI.SetActive(isEscapeMenuOpen);
+
+        if (isEscapeMenuOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     public void Quit()
