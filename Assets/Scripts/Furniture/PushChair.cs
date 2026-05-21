@@ -7,6 +7,6 @@ public class PushChair : MonoBehaviour
     {
         Vector3 pushDirection = transform.forward;
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(pushDirection * 2f, ForceMode.Impulse);
+        rb.AddForce(pushDirection * pushForce, ForceMode.Impulse);
     }
 }

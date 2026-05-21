@@ -206,6 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FurnitureSize
   cubeSize: {x: 1.4, y: 2.2, z: 1.3}
   cubeOffset: {x: 0, y: 0.9, z: 0.62}
+  rotation: {x: 0, y: 0, z: 0}
   gizmoColour: {r: 0, g: 1, b: 1, a: 1}
   forwardLineLength: 2
   lineColour: {r: 1, g: 0, b: 0, a: 1}
@@ -258,6 +259,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   interactionPrompt: Press E to push the chair
+  soundFX: {fileID: 0}
 --- !u!114 &7865134104644691917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -283,7 +285,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2500886418
+  GlobalObjectIdHash: 2153800083
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1

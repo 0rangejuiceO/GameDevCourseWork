@@ -13,7 +13,7 @@ public class RoomTypesEditor : Editor
 
         RoomTypeDataset handler = (RoomTypeDataset)target;
 
-        if (GUILayout.Button("Auto Assign Levels"))
+        if (GUILayout.Button("Auto Assign Rooms"))
         {
             string[] guids = AssetDatabase.FindAssets(
                 "t:RoomType",
